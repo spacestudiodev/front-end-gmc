@@ -2,3 +2,9 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+.mapReference {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../public/images/map_reference.png);
+}
