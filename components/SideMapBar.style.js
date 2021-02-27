@@ -4,31 +4,44 @@ const getRadius = (theme) => theme.border.radius;
 
 export const SMBarCont = styled.div`
     position: fixed;
-    width: 280px;
+    width: 260px;
     height: 500px;
     border-bottom-right-radius: 25px;
-    background-color: ${({ theme }) => theme.color.secondary};
-    padding: 20px;
+    background-color: ${({ theme }) => theme.color.sec};
+    padding: 15px;
+    box-shadow: 11px 11px 60px -10px;
 `
 
-export const SMBarIcon = styled.div`
-    width: 60px;
-    height: 60px;
-    border-radius: ${({ theme }) => theme.border.radius};
-    background-color: ${({ theme }) => theme.color.primary};
+export const SMBarHeader = styled.div`
+    height: 100px;
 `
 
 export const SMBarButtExitCont = styled.div`
-    width: 35px;
-    height: 60px;
-    border-radius: ${({ theme }) => `0 ${getRadius(theme)} ${getRadius(theme)} 0`};
     position: absolute;
+    width: 31px;
+    height: 55px;
+    border-radius: ${({ theme }) => `0 ${getRadius(theme)} ${getRadius(theme)} 0`};
     top: 30px;
-    right: -34px; 
-    background-color: ${({ theme }) => theme.color.secondary};
+    right: -19px; 
+    background-color: ${({ theme }) => theme.color.pri};
+
+    &::before{ 
+        z-index: -1;
+        content: "";
+        position: absolute;
+        width: 0; 
+        height: 0;
+        transform: translateY(-50%); 
+        top: 100%;
+
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        
+        border-right: 12px solid ${({ theme }) => theme.color.sec_dark};
+    }
 `
 
 export const SMBarDDownCont = styled.div`
     width: 100%;
-    height: 55px;
+    height: 50px;
 `

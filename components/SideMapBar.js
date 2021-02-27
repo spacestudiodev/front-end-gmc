@@ -1,25 +1,30 @@
 import {
     SMBarCont,
-    SMBarIcon,
+    SMBarHeader,
     SMBarButtExitCont,
     SMBarDDownCont
 } from './SideMapBar.style'
 
 import Dropdown from './Dropdown'
 
+const dropdownValues = [
+    "Hello World 1", "Hello World 2", "Hello World 3", "Hello World 4", "Hello World 5", "Hello World 6"
+]
+
 export default function SideMapBar() {
     return (
         <SMBarCont>
+            <SMBarHeader>
+            </SMBarHeader>
+
             <SMBarButtExitCont>
-
             </SMBarButtExitCont>
+
             <div id="content">
-                <SMBarIcon>
-
-                </SMBarIcon>
-
                 <SMBarDDownCont>
-                    <Dropdown data={["hola1", "hola2", "hola3"]} value={0} />
+                    <Dropdown data={dropdownValues}
+                        value={undefined}
+                        placeholder="Select a District" />
                 </SMBarDDownCont>
             </div>
         </SMBarCont>

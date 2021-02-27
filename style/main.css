@@ -1,6 +1,20 @@
+@font-face {
+    font-family: "DM Sans";
+    src: url(../public/fonts/DMSans-Regular.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "DM Sans";
+    src: url(../public/fonts/DMSans-Bold.ttf);
+    font-weight: bold;
+}
+
+
 * {
     margin: 0;
     box-sizing: border-box;
+    font-family: 'DM Sans';
 }
 
 .mapReference {
