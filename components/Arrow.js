@@ -1,6 +1,6 @@
 import styled, { useTheme } from 'styled-components'
 
-const DDownArrow = styled.div`
+const ArrowItem = styled.div`
     position: absolute;
 
     ${({ w, h, l, t }) => `
@@ -21,7 +21,7 @@ const DDownArrow = styled.div`
                     p === 1 ? `${-(angle - 90)}deg` : `${-(180 - angle - 90)}deg`});
 `
 
-const DDownArrowCont = styled.div`
+const ArrowCont = styled.div`
     position: relative;
     ${({ w, h }) => `
         width: ${w};
@@ -41,19 +41,19 @@ export default function Arrow({ dir = "b", color, size = 20, angle = 45 }) {
     const theme = useTheme()
 
     return (
-        <DDownArrowCont w="16.98px" h="16.98px">
-            <DDownArrow w={radius + "px"} h={thickness + "px"}
+        <ArrowCont w="16.98px" h="16.98px" id="arrowCont">
+            <ArrowItem w={radius + "px"} h={thickness + "px"}
                 l={dir === "t" || dir === "b" ? offset : 0}
                 t={dir === "l" || dir === "r" ? offset : 0}
                 dir={dir} p={0}
                 color={color ?? theme.color.light}
                 angle={angle} />
-            <DDownArrow w={radius + "px"} h={thickness + "px"}
+            <ArrowItem w={radius + "px"} h={thickness + "px"}
                 l={dir === "t" || dir === "b" ? -offset : 0}
                 t={dir === "l" || dir === "r" ? -offset : 0}
                 dir={dir} p={1}
                 color={color ?? theme.color.light}
                 angle={angle} />
-        </DDownArrowCont>
+        </ArrowCont>
     )
 }
