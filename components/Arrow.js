@@ -41,7 +41,7 @@ export default function Arrow({ dir = "b", color, size = 20, angle = 45 }) {
     const theme = useTheme()
 
     return (
-        <ArrowCont w="16.98px" h="16.98px" id="arrowCont">
+        <ArrowCont w={cosine * radius * 2 + "px"} h={cosine * radius * 2 + "px"} id="arrowCont">
             <ArrowItem w={radius + "px"} h={thickness + "px"}
                 l={dir === "t" || dir === "b" ? offset : 0}
                 t={dir === "l" || dir === "r" ? offset : 0}

@@ -19,7 +19,7 @@ export default function SideMapBar() {
             </SMBarHeader>
 
             <SMBarButtExitCont>
-                <Arrow dir="r" />
+                <Arrow dir="l" size={20} />
             </SMBarButtExitCont>
 
             <div id="content">

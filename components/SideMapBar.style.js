@@ -39,6 +39,13 @@ export const SMBarButtExitCont = styled.div`
         
         border-right: 12px solid ${({ theme }) => theme.color.sec_dark};
     }
+
+    & > #arrowCont {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+    }
 `
 
 export const SMBarDDownCont = styled.div`
