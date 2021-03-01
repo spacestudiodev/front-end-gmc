@@ -5,8 +5,8 @@ import {
     SMBarDDownCont
 } from './SideMapBar.style'
 
-import Dropdown from './Dropdown'
-import Arrow from './Arrow'
+import Dropdown from '../UI/Dropdown'
+import Arrow from '../UI/Arrow'
 
 const dropdownValues = [
     "Hello World 1", "Hello World 2", "Hello World 3", "Hello World 4", "Hello World 5", "Hello World 6"
@@ -19,7 +19,7 @@ export default function SideMapBar() {
             </SMBarHeader>
 
             <SMBarButtExitCont>
-                <Arrow dir="l" size={20} />
+                <Arrow dir="l" size={23} />
             </SMBarButtExitCont>
 
             <div id="content">

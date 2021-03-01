@@ -1,4 +1,4 @@
-import SideMapBar from '../components/SideMapBar'
+import SideMapBar from '../components/SidebarMap/SideMapBar'
 
 export default function Home() {
   return (
