@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 import {
     SMBarCont,
     SMBarHeader,
@@ -8,6 +10,7 @@ import {
 import Dropdown from '../UI/Dropdown'
 import Arrow from '../UI/Arrow'
 
+
 const dropdownValues = [
     "Hello World 1", "Hello World 2", "Hello World 3", "Hello World 4", "Hello World 5", "Hello World 6"
 ]
@@ -16,6 +19,11 @@ export default function SideMapBar() {
     return (
         <SMBarCont>
             <SMBarHeader>
+                <Image src="/images/logogmc.png"
+                    alt="Logo GMC"
+                    width={130}
+                    height={50}
+                    id="logogmc"></Image>
             </SMBarHeader>
 
             <SMBarButtExitCont>
@@ -30,6 +38,6 @@ export default function SideMapBar() {
                         placeholder="Select a District" />
                 </SMBarDDownCont>
             </div>
-        </SMBarCont>
+        </SMBarCont >
     )
 }

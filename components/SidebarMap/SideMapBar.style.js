@@ -13,7 +13,15 @@ export const SMBarCont = styled.div`
 `
 
 export const SMBarHeader = styled.div`
-    height: 100px;
+    position: relative;
+    height: 90px; 
+    margin: 10px 0;
+
+    & > div{
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+    }
 `
 
 export const SMBarButtExitCont = styled.div`
