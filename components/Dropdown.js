@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Arrow from './Arrow'
 import {
     DDownCont,
     DDownPlaceholder,
@@ -8,17 +9,16 @@ import {
     DDownList,
     DDownListItemCont,
     DDownListItem,
-    DDownValue,
-    DDownArrow,
-    DDownArrowCont
+    DDownValue
 } from './Dropdown.style'
+import { useTheme } from 'styled-components'
 
 export default function Dropdown({
     data = [],
     value = undefined,
     placeholder = "Select",
     style,
-    className }) {
+    className, ...props }) {
 
     const [val, setVal] = useState(value)
 
@@ -32,6 +32,8 @@ export default function Dropdown({
     const sizeList = maxItems * itemWidth
     const scrollSize = extraMargin * 2 + sizeList
     const maxHeight = heightMain + scrollSize
+
+    const theme = useTheme()
 
     return (
         <DDownCont id="ddownCont" ref={(ref) => {
@@ -69,10 +71,7 @@ export default function Dropdown({
                     :
                     <DDownPlaceholder>{placeholder}</DDownPlaceholder>}
 
-                <DDownArrowCont w="16.98px">
-                    <DDownArrow w="10px" h="2px" l="2px" />
-                    <DDownArrow w="2px" h="10px" t="-4px" />
-                </DDownArrowCont>
+                <Arrow dir={isOpen ? "t" : "b"} color={theme.color.fnt_sec} />
 
             </DDownHeaderCont>
         </DDownCont>

@@ -95,30 +95,6 @@ export const DDownValue = styled(DDownPlaceholder)`
     color: ${({ theme }) => theme.color.fnt_sec};
 `
 
-export const DDownArrowCont = styled.div`
-    position: relative;
-    transform: transitionX(-50%);
-
-    ${({ w }) => `
-        width: ${w};
-    `}
-`
-
-export const DDownArrow = styled.div`
-    position: absolute;
-
-    ${({ w, h, l, t }) => `
-        width: ${w};
-        height: ${h};
-        left: ${l};
-        top: ${t};
-    `}
-
-    border-radius: 15px;
-    background-color: ${({ theme }) => theme.color.fnt_sec};
-    transform: rotate(-45deg);
-`
-
 export const DDownListCont = styled.div`
     position: absolute;
     top: 0;
