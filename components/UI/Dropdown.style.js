@@ -31,11 +31,6 @@ export const DDownList = styled.div`
     width: 100%;
 `
 
-export const DDownListItem = styled.p`
-    font-weight: bold;
-    color: ${({ theme }) => theme.color.fnt_sec};
-`
-
 export const DDownListItemCont = styled.div`
     position: relative;
     padding: 0 20px;
@@ -84,15 +79,6 @@ export const DDownHeaderCont = styled.div`
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-`
-
-export const DDownPlaceholder = styled.p`
-    color: ${({ theme }) => theme.color.fnt_place};
-    font-weight: bold;
-`
-
-export const DDownValue = styled(DDownPlaceholder)`
-    color: ${({ theme }) => theme.color.fnt_sec};
 `
 
 export const DDownListCont = styled.div`

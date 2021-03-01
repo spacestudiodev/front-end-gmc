@@ -1,17 +1,16 @@
 import { useState } from 'react'
+import { useTheme } from 'styled-components'
+
 import Arrow from './Arrow'
 import {
-    DDownCont,
-    DDownPlaceholder,
     DDownHeaderCont,
     DDownListCont,
     DDownTopShadow,
     DDownList,
     DDownListItemCont,
-    DDownListItem,
-    DDownValue
 } from './Dropdown.style'
-import { useTheme } from 'styled-components'
+import { TextPlaceholder, Text } from './Text.style'
+import { ButtonDivCont } from './ButtonDiv.style'
 
 export default function Dropdown({
     data = [],
@@ -36,7 +35,7 @@ export default function Dropdown({
     const theme = useTheme()
 
     return (
-        <DDownCont id="ddownCont" ref={(ref) => {
+        <ButtonDivCont id="ddownCont" ref={(ref) => {
             if (ref)
                 setHeightMain(ref.offsetHeight)
         }} style={style} className={className} >
@@ -52,7 +51,7 @@ export default function Dropdown({
                                     setVal(index)
                                     setIsOpen(false)
                                 }}>
-                                <DDownListItem>{v}</DDownListItem>
+                                <Text secondary bold>{v}</Text>
                             </DDownListItemCont>
                         ))}
                     </DDownList>
@@ -67,13 +66,13 @@ export default function Dropdown({
             }} >
                 {val !== undefined
                     ?
-                    <DDownValue>{data[val]}</DDownValue>
+                    <Text secondary bold>{data[val]}</Text>
                     :
-                    <DDownPlaceholder>{placeholder}</DDownPlaceholder>}
+                    <TextPlaceholder bold>{placeholder}</TextPlaceholder>}
 
                 <Arrow dir={isOpen ? "t" : "b"} color={theme.color.fnt_sec} />
 
             </DDownHeaderCont>
-        </DDownCont>
+        </ButtonDivCont>
     )
 }

@@ -1,20 +1,23 @@
 @font-face {
-    font-family: "DM Sans";
-    src: url(../public/fonts/DMSans-Regular.ttf);
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-Medium.woff);
     font-weight: normal;
 }
 
 @font-face {
-    font-family: "DM Sans";
-    src: url(../public/fonts/DMSans-Bold.ttf);
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-SemiBold.woff);
     font-weight: bold;
 }
-
 
 * {
     margin: 0;
     box-sizing: border-box;
-    font-family: 'DM Sans';
+}
+
+body {
+    font-family: 'Inter';
+    font-size: 15px;
 }
 
 .mapReference {

@@ -14,5 +14,10 @@ export default {
     },
     border: {
         radius: "15px"
+    },
+    font: {
+        size: {
+
+        }
     }
 }
