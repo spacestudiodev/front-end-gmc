@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components'
 
 import Arrow from './Arrow'
 import {
+    DDownCont,
     DDownHeaderCont,
     DDownListCont,
     DDownTopShadow,
@@ -10,7 +11,6 @@ import {
     DDownListItemCont,
 } from './Dropdown.style'
 import { TextPlaceholder, Text } from './Text.style'
-import { ButtonDivCont } from './ButtonDiv.style'
 
 export default function Dropdown({
     data = [],
@@ -35,7 +35,7 @@ export default function Dropdown({
     const theme = useTheme()
 
     return (
-        <ButtonDivCont id="ddownCont" ref={(ref) => {
+        <DDownCont id="ddownCont" ref={(ref) => {
             if (ref)
                 setHeightMain(ref.offsetHeight)
         }} style={style} className={className} >
@@ -73,6 +73,6 @@ export default function Dropdown({
                 <Arrow dir={isOpen ? "t" : "b"} color={theme.color.fnt_sec} />
 
             </DDownHeaderCont>
-        </ButtonDivCont>
+        </DDownCont>
     )
 }

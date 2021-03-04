@@ -1,10 +1,7 @@
-import SideMapBar from '../components/SidebarMap/SideMapBar'
+import Pages from '../components/pages'
 
-export default function Home() {
+export default function Home({ asPath }) {
   return (
-    <>
-      <SideMapBar />
-      <div className="mapReference"></div>
-    </>
+    <Pages asPath={asPath} />
   )
 }

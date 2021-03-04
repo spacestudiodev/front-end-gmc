@@ -5,11 +5,15 @@ const getRadius = (theme) => theme.border.radius;
 export const SMBarCont = styled.div`
     position: fixed;
     width: 260px;
-    height: 500px;
+    height: 550px;
     border-bottom-right-radius: 25px;
     background-color: ${({ theme }) => theme.color.sec};
     padding: 15px;
     box-shadow: 11px 11px 60px -10px;
+
+    & #smbarNav {
+        margin-top: 15px;
+    }
 `
 
 export const SMBarHeader = styled.div`
@@ -17,7 +21,7 @@ export const SMBarHeader = styled.div`
     height: 90px; 
     margin: 10px 0;
 
-    & > div{
+    & > img {
         position: absolute;
         transform: translateY(-50%);
         top: 50%;

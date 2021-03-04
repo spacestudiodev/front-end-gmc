@@ -1,16 +1,11 @@
 import styled from 'styled-components'
+import { ButtonDivCont } from './ButtonDiv.style'
 
 const transSpeed = "250ms cubic-bezier(0.11, 0.06, 0, 0.98)"
 const transSpeedComp = "200ms"
 
-export const DDownCont = styled.div`
-    width: 100%;
-    height: 100%;
-    position: relative;
-
-    & * {
-        user-select: none;
-    }
+export const DDownCont = styled(ButtonDivCont)`
+    z-index: 2;
 `
 
 export const DDownTopShadow = styled.div`
@@ -57,7 +52,7 @@ export const DDownListItemCont = styled.div`
         background-color: ${theme.color.ter};
 
         p {
-          color: ${theme.color.fnt_pri};  
+          color: ${theme.color.pri};  
         }
     `: ` 
         &:hover {
