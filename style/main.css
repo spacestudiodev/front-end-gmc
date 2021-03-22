@@ -53,3 +53,29 @@ a {
         url("/images/buttonbackgroundplay.png") no-repeat center;
     background-size: cover;
 }
+
+.backButton {
+    width: 100px;
+    height: 55px;
+    background-color: white;
+    border-radius: 15px;
+    position: absolute;
+    right: 0;
+    transform: translateY(-55px);
+    transition: transform 400ms;
+}
+
+.backButton>div {
+    width: 15px;
+    height: 15px;
+}
+
+.backButton p {
+    color: #2D1B32;
+}
+
+.backButton img {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}

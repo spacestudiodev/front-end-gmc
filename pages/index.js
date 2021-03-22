@@ -1,7 +1,7 @@
 import Pages from '../components/pages'
 
-export default function Home({ asPath }) {
+export default function Home() {
   return (
-    <Pages asPath={asPath} />
+    <Pages />
   )
 }

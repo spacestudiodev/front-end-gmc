@@ -8,16 +8,19 @@ import {
     BInfoTopBorder,
     BInfoMenuButton,
     BInfoMarginCont
-} from "./BoxInformation.style";
-import { useLocation } from 'react-router-dom'
+} from "./BoxInformation.style"
+import { useLocation, useHistory } from 'react-router-dom'
+import Button from '../UI/ButtonDiv'
 
 function isUpperCase(aCharacter) {
     return (aCharacter >= 'A') && (aCharacter <= 'Z');
 }
 
-export function BoxInformation({ pathHover, title }) {
+export function BoxInformation({ pathHover, title, children }) {
 
     const { pathname } = useLocation()
+    const history = useHistory()
+
     const [lastText, setLastText] = useState("")
 
     const mainRef = useRef();
@@ -97,11 +100,16 @@ export function BoxInformation({ pathHover, title }) {
 
                 <BInfoMarginCont>
                     <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
+
+                    <Button className="backButton" src="/images/arrow.png" onClick={() => history.push("/")}>
+                        Atras
+                    </Button>
+
                 </BInfoMarginCont>
 
             </BInfoHeader>
             <BInfoContentCont>
-
+                {children}
             </BInfoContentCont>
         </BInfoCont>
     )

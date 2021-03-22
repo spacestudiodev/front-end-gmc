@@ -145,6 +145,10 @@ export const BInfoCont = styled.div`
         ${BInfoMenuButton}{
             transform: translateX(0);
         }
+
+        .backButton{
+            transform: translateY(30px);
+        }
     `}
     
 `

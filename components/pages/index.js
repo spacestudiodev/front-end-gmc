@@ -1,14 +1,24 @@
 import { useState } from "react"
+import { useLocation } from 'react-router-dom'
+
 import { BoxInformation } from "../templates/BoxInformation"
-import MapPage from "./MapPage"
+
+import DynamicTarget from "../Helper/DynamicTarget"
+import DynamicSwitch from "../Helper/DynamicSwitch"
+
 import SideMapBar from '../SidebarMap/SideMapBar'
 
-export default function HomePages({ asPath }) {
+import MapPage from "./MapPage"
+import NewFindingsPage from "./NewFindingsPage"
+
+export default function HomePages() {
     let [mainIsLoad, setMainIsLoad] = useState(false)
 
-    const [values, setValues] = useState([asPath])
+    const { pathname } = useLocation()
 
-    if (asPath === "/" && !mainIsLoad) {
+    const [values, setValues] = useState([])
+
+    if (pathname === "/" && !mainIsLoad) {
         mainIsLoad = true
         setMainIsLoad(true)
     }
@@ -20,6 +30,16 @@ export default function HomePages({ asPath }) {
             {mainIsLoad && <MapPage />}
 
             <BoxInformation pathHover={values[0]} title={values[1]}>
+
+                <DynamicSwitch>
+                    <DynamicTarget target="/nuevosHallazgos">
+                        <NewFindingsPage></NewFindingsPage>
+                    </DynamicTarget>
+
+                    <DynamicTarget target="/actividadesCulturales">
+                        actividadesCulturales
+                    </DynamicTarget>
+                </DynamicSwitch>
 
             </BoxInformation>
         </div>

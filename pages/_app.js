@@ -13,6 +13,7 @@ export default function MyApp({ Component, pageProps, router }) {
     // Page props es el codigo que bota esta respuesta (ejemplo: 404)
     const asPath = router.asPath
     const isServer = router.isSsr === undefined
+    const isError = pageProps.statusCode !== 404
 
     if (!isServer) {
         if (!StartComponent)
@@ -24,7 +25,7 @@ export default function MyApp({ Component, pageProps, router }) {
     return (
         <WithRouterSSR asPath={asPath}>
             <ThemeProvider theme={theme}>
-                <StartComponent {...pageProps} asPath={asPath} />
+                <StartComponent {...pageProps} />
             </ThemeProvider>
         </WithRouterSSR>
     )
