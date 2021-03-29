@@ -36,15 +36,12 @@ export function BoxInformation({ pathHover, title, children }) {
 
     // Obtener el titulo de la ventana
     if (title === undefined || isActive) {
-        const input = pathname.charAt(1).toUpperCase() + pathname.slice(2);
+        const titleArr = pathname.split("-")
+        let result = titleArr[0].charAt(1).toUpperCase() + titleArr[0].slice(2);
 
-        let result = input
-
-        for (let i = 1; i < input.length; i++) {
-            let char = input.charAt(i)
-            if (isUpperCase(char)) {
-                result = [input.slice(0, i), " ", input.slice(i)].join("")
-            }
+        for (let i = 1; i < titleArr.length; i++) {
+            const word = titleArr[i];
+            result += " " + word.charAt(0).toUpperCase() + word.slice(1)
         }
 
         if (result !== "" && result !== lastText) setLastText(result)
@@ -101,7 +98,7 @@ export function BoxInformation({ pathHover, title, children }) {
                 <BInfoMarginCont>
                     <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
 
-                    <Button className="backButton" src="/images/arrow.png" onClick={() => history.push("/")}>
+                    <Button className="backButton" src="/images/arrowL.png" onClick={() => history.push("/")}>
                         Atras
                     </Button>
 

@@ -41,13 +41,13 @@ export default function SideMapBar({ onChangePathHover }) {
 
                 <div id="smbarNav">
                     <ButtonNav
-                        link="/nuevosHallazgos"
+                        link="/nuevos-hallazgos"
                         icon="/images/newFindings.png"
                         title="Nuevos Hallazgos"
                         description="Hallazgos que pronto estarán en el mapa"
                         onHover={onChangePathHover} />
                     <ButtonNav
-                        link="/actividadesCulturales"
+                        link="/actividades-culturales"
                         icon="/images/activities.png"
                         title="Actividades Culturales"
                         description="Talleres, presentaciones..."
@@ -56,7 +56,7 @@ export default function SideMapBar({ onChangePathHover }) {
                         link="/publicaciones"
                         icon="/images/publications.png"
                         title="Publicaciones"
-                        description="PDFs que el usuario puede leer y descargar"
+                        description="PDFs para leer y descargar"
                         onHover={onChangePathHover} />
                 </div>
                 <Separator space="20px"></Separator>

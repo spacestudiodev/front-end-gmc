@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
-import { getListNewFindings } from "../../api/GETs";
+import { getListCulturalActivities } from "../../api/GETs";
 import BoxItemsContainer from "../templates/BoxItemsContainer";
 
-export default function NewFindingsPage({ data, isOpen }) {
+export default function CulturalActivitiesPage({ data, isOpen }) {
     const [_data, setData] = useState(data)
 
     useEffect(() => {
         if (!_data)
-            getListNewFindings().then(data => setData(data))
+            getListCulturalActivities().then(data => setData(data))
     }, [])
 
     return (
         <BoxItemsContainer
             data={_data}
             isOpen={isOpen}
-            resourceUrl="NuevosHallazgos"
+            resourceUrl="actividades"
             template={{
-                displayType: "horizontal",
+                displayType: "vertical",
                 itemAccess: {
                     image: "foto",
-                    title: "nombre",
-                    description: "contenido",
-                    to: "slug",
-                    canShare: true
+                    title: "titulo",
+                    to: "slug"
                 }
             }} />
     )

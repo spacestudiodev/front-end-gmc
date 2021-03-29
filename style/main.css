@@ -79,3 +79,37 @@ a {
     height: 15px;
     object-fit: contain;
 }
+
+.nextButton {
+    width: 123px;
+    height: 40px;
+    background-color: #F8EB22;
+    border-radius: 10px;
+    left: 0;
+    right: auto;
+}
+
+.nextButton p {
+    left: 15px;
+    position: absolute;
+    font-weight: 600;
+}
+
+.nextButton>div {
+    position: absolute;
+    right: 12px;
+    margin: 0;
+}
+
+.btborder {
+    border: 1px solid;
+    border-radius: 13px;
+}
+
+.brd-yellow {
+    border-color: #F8EB22;
+}
+
+.brd-white {
+    border-color: white;
+}

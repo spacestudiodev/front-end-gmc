@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 import {
@@ -22,7 +23,10 @@ export default function ButtonNav({ title, description, icon = "/default.jpg", l
 
                 onHover("", "")
             }}>
-            <BNavCont>
+            <BNavCont
+                as={motion.div}
+                whileHover={{ scale: 1.025 }}
+            >
                 <div id="bnavicon">
                     <BNavIconCont>
                         <img src={icon} width="17px" height="17px" />

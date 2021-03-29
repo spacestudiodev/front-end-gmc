@@ -10,8 +10,10 @@ import SideMapBar from '../SidebarMap/SideMapBar'
 
 import MapPage from "./MapPage"
 import NewFindingsPage from "./NewFindingsPage"
+import CulturalActivitiesPage from "./CulturalActivitiesPage"
+import PublicationsPage from "./PublicationsPage"
 
-export default function HomePages() {
+export default function HomePages(props) {
     let [mainIsLoad, setMainIsLoad] = useState(false)
 
     const { pathname } = useLocation()
@@ -32,12 +34,16 @@ export default function HomePages() {
             <BoxInformation pathHover={values[0]} title={values[1]}>
 
                 <DynamicSwitch>
-                    <DynamicTarget target="/nuevosHallazgos">
-                        <NewFindingsPage></NewFindingsPage>
+                    <DynamicTarget target="/nuevos-hallazgos">
+                        <NewFindingsPage data={props.newFindings} />
                     </DynamicTarget>
 
-                    <DynamicTarget target="/actividadesCulturales">
-                        actividadesCulturales
+                    <DynamicTarget target="/actividades-culturales">
+                        <CulturalActivitiesPage data={props.culturalActivities} />
+                    </DynamicTarget>
+
+                    <DynamicTarget target="/publicaciones">
+                        <PublicationsPage data={props.publications} />
                     </DynamicTarget>
                 </DynamicSwitch>
 

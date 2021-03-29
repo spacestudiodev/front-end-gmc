@@ -89,12 +89,16 @@ export const BInfoContentCont = styled.div`
     position: absolute;
     top: 0;
     left: 50%;
-    border-radius: 24px;
     transform: translate(-50%, 50%);
     transition: transform ${speed};
     width: 1080px;
-    height: 720px;
-    background-color: ${({ theme }) => theme.color.sec};
+
+    .dynamicTarget {
+        background-color: ${({ theme }) => theme.color.sec};
+        border-radius: 24px;
+        margin-bottom: 20px;
+        min-height: 720px;
+    }
 `
 
 export const BInfoCont = styled.div`
@@ -150,5 +154,4 @@ export const BInfoCont = styled.div`
             transform: translateY(30px);
         }
     `}
-    
 `

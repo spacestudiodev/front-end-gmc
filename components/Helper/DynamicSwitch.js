@@ -9,7 +9,6 @@ export default function DynamicSwitch({ children }) {
 
     const { pathname } = useLocation()
     if (pathname !== "/" && pathname !== last) setLast(pathname)
-
     return (
         <>
             {Children.map(children, (c, index) => {
@@ -22,7 +21,7 @@ export default function DynamicSwitch({ children }) {
 
                 if (!firstLoad[index]) return null
 
-                return cloneElement(c, { pathname: last, key: index })
+                return cloneElement(c, { pathname, lastPathname: last, key: index })
             })}
         </>
     )
