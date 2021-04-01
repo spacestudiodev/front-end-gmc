@@ -22,6 +22,7 @@ const mitem = {
     }
 }
 
+// Test comment
 function BoxItemsContainer({ data, template, className, isOpen, resourceUrl }) {
     const resourcesUrl = `${urlServerImages}/${resourceUrl}`
 
