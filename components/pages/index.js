@@ -27,7 +27,7 @@ export default function HomePages(props) {
 
     return (
         <div id="mainPage">
-			{/*<SideMapBar onChangePathHover={(path, title) => setValues([path, title])} /> */}
+            {/*<SideMapBar onChangePathHover={(path, title) => setValues([path, title])} /> */}
 
             {mainIsLoad && <MapPage />}
 

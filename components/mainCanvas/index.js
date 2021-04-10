@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import EngineBehaviour from './engine/engineBehaviour'
 
 export default function MainCanvas() {
@@ -6,7 +6,6 @@ export default function MainCanvas() {
 
     useEffect(() => {
         const canvas = canvasRef.current
-
         const ctx = canvas.getContext('2d')
         let animationFrameId
     
@@ -17,7 +16,7 @@ export default function MainCanvas() {
 
         const render = () => {
             engine.render()
-            animationFrameId = window.requestAnimationFrame(render)
+            animationFrameId = window.requestAnimationFrame(render)            
         }
 
         render()
