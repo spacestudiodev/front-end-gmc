@@ -39,10 +39,10 @@ export default class EventsBehaviours {
         this.onKeyDown(e.key)
     }
 
-    onMouseMove(e) {}
-    onMouseDrag(pos, speedDir) {}
-    onMouseScroll(pos, deltaY) {}
-    onKeyDown(key) {}
+    onMouseMove(_e) {}
+    onMouseDrag(_pos, _speedDir) {}
+    onMouseScroll(_pos, _deltaY) {}
+    onKeyDown(_key) {}
 
     clearInputs() {
         this.element.removeEventListener('mousemove', this.fomm)

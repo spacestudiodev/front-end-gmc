@@ -1,4 +1,4 @@
-import {lerp} from "./mathHelper"
+import { lerp } from "./mathHelper"
 
 export default class Vector2 {
     constructor(x = 0, y = 0) {

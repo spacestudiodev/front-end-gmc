@@ -1,6 +1,13 @@
-import { Component, Vector2 } from ".";
+import Liria from "."
+import Component from "./component"
+import Vector2 from "./vector2"
 
 export default class Input extends Component {
+    static mousePosition = new Vector2()
+    static mouseMovDelta = new Vector2()
+    static isClicking = false
+    static mouseScrollDelta = new Vector2()
+
     static get() {
         const sing = Input.main
         
@@ -14,56 +21,83 @@ export default class Input extends Component {
         this.main = target
     }
 
-    static addGetKeyDown(func) {
+    static onKeyDown(func) {
         const sing = Input.get()
-        sing?._iokdown.push(func)
+        sing?._eokdown.push(func)
     }
 
-    static addGetKeyUp(func) {
+    static onKeyUp(func) {
         const sing = Input.get()
-        sing?._iokup.push(func)
+        sing?._eokup.push(func)
+    }
+
+    static onMouseMove(func){
+        const input = Input.get()
+        input?._eommove.push(func)
+    }
+
+    static onMouseScroll(func) {
+        const input = Input.get()
+        input?._eomscroll.push(func)
     }
 
     init() {
-        this.set(this)
+        Input.set(this)
 
-        this._iokdown = []
-        this._iokup = []
+        this._eokdown = []
+        this._eokup = []
+        this._eommove = []
+        this._eomscroll = []
+
+        this.canvas = Liria.get().canvas
 
         this.fokd = this._onkeydown.bind(this)
         this.foku = this._onkeyup.bind(this)
         this.fomm = this._onmousemove.bind(this)
+        this.foms = this._onmousescroll.bind(this)
         
         window.addEventListener("keydown", this.fokd)
         window.addEventListener("keyup", this.foku)
 
-        //this.canvas.addEventListener("mousemove", this.fomm)
+        this.canvas.addEventListener('wheel', this.foms, { passive: true })
+        this.canvas.addEventListener("mousemove", this.fomm)
 
         Input.mousePosition = new Vector2()
-        Input.mouseDelta = new Vector2()
+        Input.mouseMovDelta = new Vector2()
     }
 
     _onkeydown(e) {
-        for (let iok of this.iokdown)
-            iok(e)
+        for (let eok of this._eokdown)
+            eok(e)
     }
 
     _onkeyup(e) {
-        for (let iok of this.iokup)
-            iok(e)
+        for (let eok of this._eokup)
+            eok(e)
     }
 
     _onmousemove(e) {
-        Input.mousePosition.x = e.offsetX
-        Input.mousePosition.y = e.offsetY
-        Input.mouseDelta.x = e.movementX
-        Input.mouseDelta.y = e.movementY
+        Input.mousePosition = new Vector2(e.offsetX, e.offsetY)
+        Input.mouseMovDelta.x = new Vector2(e.movementX, e.movementY)
+        Input.isClicking = e.buttons === 1
+
+        for (let func of this._eommove)
+            func()
+    }
+
+    _onmousescroll(e) {
+        Input.mouseScrollDelta.x = e.deltaX
+        Input.mouseScrollDelta.y = e.deltaY
+
+        for (let func of this._eomscroll)
+            func()
     }
 
     destroy() {
         window.removeEventListener("keydown", this.fokd)
         window.removeEventListener("keyup", this.foku)
 
-        //this.canvas.removeEventListener("mousemove", this.fomm)
+        this.canvas.removeEventListener("mousemove", this.fomm)
+        this.canvas.removeEventListener("wheel", this.foms)
     }
 }

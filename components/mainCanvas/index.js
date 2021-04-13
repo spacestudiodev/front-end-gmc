@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import Liria from '../../modules/liria'
 import EngineBehaviour from './engine/engineBehaviour'
 
 export default function MainCanvas() {
@@ -12,10 +13,13 @@ export default function MainCanvas() {
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
 
-        const engine = new EngineBehaviour(ctx)
+        //const engine = new EngineBehaviour(ctx)
+        const liria = new Liria(ctx)
 
         const render = () => {
-            engine.render()
+            //engine.render()
+
+            liria.render()
             animationFrameId = window.requestAnimationFrame(render)            
         }
 
@@ -23,7 +27,9 @@ export default function MainCanvas() {
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)
-            engine.dispose()
+            //engine.dispose()
+
+            liria.dispose()
         }
     }, [])
 

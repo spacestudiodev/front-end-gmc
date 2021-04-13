@@ -1,6 +1,8 @@
-import {Input} from "."
-
 export default class Component {
+    _init() {
+        this.init()
+    }
+
     // Se llama al crear el componente y es agregado a la scena
     init() { }
 
@@ -11,24 +13,13 @@ export default class Component {
             this.start()
         } else this.update()
     }
-    
-    // Habilitar el OnKeyDown
-    useKeyDown() {
-        Input.addGetKeyDown(this.onKeyDown.bind(this))
-    }
 
-    // Habilitar el OnKeyUp
-    useKeyUp() {
-        Input.addGetKeyUp(this.onKeyUp.bind(this))
-    }
-    
     // Se llama antes del update
     start() { }
     // Se llama a esta funcion en cada Frame
     update() { }
-
-    onKeyDown(e) { }
-    onKeyUp(e) { }
+    // Se llama al terminar el update de todos los items
+    endUpdate() {  }
     
     _dispose() {
         this.destroy()
