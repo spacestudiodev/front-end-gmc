@@ -43,13 +43,12 @@ export default class Liria {
 
     render() {
         this._runAllNodes(node => node._render())
-        for (let node of this.endUpdateNodes)
-            node._endUpdate()
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        this._runAllNodes(node => node._draw())
     }
 
-    addNode(node, endUpdate = false){
+    addNode(node){
         this.nodes.push(node)
-        if(endUpdate) this.endUpdateNodes.push(node)
         node._init()
     }
 

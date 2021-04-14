@@ -9,4 +9,8 @@ export default class Vector2 {
     static lerp(val, to, i){
         return new Vector2(lerp(val.x, to.x, i), lerp(val.y, to.y, i))
     }
+
+    static clone(vector) {
+        return new Vector2(vector.x, vector.y)
+    }
 }

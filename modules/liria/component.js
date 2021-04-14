@@ -1,5 +1,6 @@
 export default class Component {
-    _init() {
+    _init(node) {
+        this.node = node
         this.init()
     }
 
@@ -14,12 +15,16 @@ export default class Component {
         } else this.update()
     }
 
+    _draw() {
+        this.draw()
+    }
+
+    draw() {  }
+
     // Se llama antes del update
     start() { }
     // Se llama a esta funcion en cada Frame
     update() { }
-    // Se llama al terminar el update de todos los items
-    endUpdate() {  }
     
     _dispose() {
         this.destroy()

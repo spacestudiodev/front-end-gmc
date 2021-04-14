@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
+import MainScene from '../../liriaScripts/mainScene'
 import Liria from '../../modules/liria'
 import EngineBehaviour from './engine/engineBehaviour'
 
@@ -15,6 +16,7 @@ export default function MainCanvas() {
 
         //const engine = new EngineBehaviour(ctx)
         const liria = new Liria(ctx)
+        liria.addNode(new MainScene())
 
         const render = () => {
             //engine.render()

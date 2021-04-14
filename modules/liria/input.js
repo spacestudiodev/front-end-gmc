@@ -78,7 +78,7 @@ export default class Input extends Component {
 
     _onmousemove(e) {
         Input.mousePosition = new Vector2(e.offsetX, e.offsetY)
-        Input.mouseMovDelta.x = new Vector2(e.movementX, e.movementY)
+        Input.mouseMovDelta = new Vector2(e.movementX, e.movementY)
         Input.isClicking = e.buttons === 1
 
         for (let func of this._eommove)
@@ -88,6 +88,7 @@ export default class Input extends Component {
     _onmousescroll(e) {
         Input.mouseScrollDelta.x = e.deltaX
         Input.mouseScrollDelta.y = e.deltaY
+        Input.mousePosition = new Vector2(e.offsetX, e.offsetY)
 
         for (let func of this._eomscroll)
             func()
