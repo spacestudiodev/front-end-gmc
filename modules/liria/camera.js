@@ -15,42 +15,34 @@ export default class Camera extends Component {
 
     onMouseScroll() {
         const mDeltaY = Input.mouseScrollDelta.y
-        const deltaY = mDeltaY < 0 ? 1.1 : 0.9
+        const deltaY = mDeltaY < 0 ? 1.5 : -1.5
 
         const pos = Input.mousePosition
-        const worldPos = this.liria.worldPosition
+        const relativePos = this.liria.screenToWorldPos(pos)
 
-        const width = this.liria.canvas.width
-        const height = this.liria.canvas.height
+        const lastZoom = this.liria.worldZoom
+        
+        this.liria.zPos += deltaY
+        const nextZoom= Math.pow(1.1, this.liria.zPos)
 
-        const cWidth = width / this.liria.worldZoom
-        const cHeight = height / this.liria.worldZoom
+        console.log(this.liria.zPos / 6 + 14.25)
 
-        const relativePos = new Vector2(pos.x / width, pos.y / height)
-        relativePos.x = relativePos.x * cWidth + Math.abs(worldPos.x) / this.liria.worldZoom
-        relativePos.y = relativePos.y * cHeight + Math.abs(worldPos.y) / this.liria.worldZoom
-
-        const lastZoom = this.zoom
-        this.liria.worldZoom *= deltaY
-
-        //this.zoom = clamp(this.zoom, this.minZoom, this.maxZoom)
-
+        this.liria.worldZoom = nextZoom
         const dif = this.liria.worldZoom - lastZoom
 
-        this.camPos.x -= relativePos.x * dif
-        this.camPos.y -= relativePos.y * dif
-
+        this.liria.cameraPosition.x -= relativePos.x * dif
+        this.liria.cameraPosition.y -= relativePos.y * dif
     }
 
     onMouseMove() {
         if(!Input.isClicking) return
 
-        this.liria.worldPosition.x += Input.mouseMovDelta.x 
-        this.liria.worldPosition.y += Input.mouseMovDelta.y
+        this.liria.cameraPosition.x += Input.mouseMovDelta.x 
+        this.liria.cameraPosition.y += Input.mouseMovDelta.y
     }
 
     alertInfo(e) {
         if(e.key === " ")
-           console.log(this.liria.worldPosition)
+           console.log(this.liria.cameraPosition)
     }
 }

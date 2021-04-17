@@ -85,16 +85,6 @@ export function BoxInformation({ pathHover, title, children }) {
             <BInfoHeader>
                 <BInfoTopBorder />
 
-                <BInfoMenuButton>
-                    <div>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 18L4 18" stroke="#2D1B33" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M20 12L4 12" stroke="#2D1B33" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M20 6L4 6" stroke="#2D1B33" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
-                </BInfoMenuButton>
-
                 <BInfoMarginCont>
                     <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
 

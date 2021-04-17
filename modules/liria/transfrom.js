@@ -6,18 +6,15 @@ export default class Transform extends Component {
     init() {
         this.liria = Liria.get()
 
-        this.width = 0
-        this.height = 0
-
         this._worldPosition = new Vector2()
 
         Object.defineProperty(this, "worldPosition", {
             get: () => { 
-                const worldPos = new Vector2(this.liria.worldPosition.x, this.liria.worldPosition.y)
+                const worldPos = new Vector2(this.liria.cameraPosition.x, this.liria.cameraPosition.y)
                 const worldZoom = this.liria.worldZoom
                 const pos = this.position
-                worldPos.x += pos.x * worldZoom
-                worldPos.y += pos.y * worldZoom
+                worldPos.x += pos.x * worldZoom * this.scale.x
+                worldPos.y += pos.y * worldZoom * this.scale.y
                 return worldPos
             }
         })
@@ -34,13 +31,13 @@ export default class Transform extends Component {
         this._position = new Vector2()
         Object.defineProperty(this, "position", {
             get: () => {
-                let result = new Vector2(this._localPosition.x, this._localPosition.y)
+                let result = Vector2.clone(this._localPosition)
                 
                 if(this.parent) {
                     const parentPos = this.parent.transform.position
                     result = new Vector2(parentPos.x + result.x, parentPos.y + result.y)
                 }
-                
+
                 return Object.freeze(result)
             },
             set: v => {
@@ -68,7 +65,7 @@ export default class Transform extends Component {
 
                 if(this.parent) {
                     const parentScale = this.parent.transform.scale
-                    result = new Vector2(parentScale.x + result.x, parentScale.y + result.y)
+                    result = new Vector2(parentScale.x * result.x, parentScale.y * result.y)
                 }
 
                 return Object.freeze(result)
@@ -103,8 +100,8 @@ export default class Transform extends Component {
                 }
 
                 if(v){
-                    const childs = this.node._childs
-                    childs.push(v)
+                    const childs = v._childs
+                    childs.push(this.node)
                 }
 
                 this._parent = v

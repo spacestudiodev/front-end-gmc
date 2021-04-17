@@ -15,10 +15,13 @@ export default class Node {
     addComponent(comp) {
         this._components.push(comp)
         comp._init(this)
+        return comp
     }
 
     addChild(node) {
+        node._init()
         node.transform.parent = this
+        return node
     }
 
     removeChild(node) {

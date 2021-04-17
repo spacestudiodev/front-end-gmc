@@ -19,6 +19,10 @@ export default class Liria {
 
     nodes = []
     endUpdateNodes = []
+    cameraPosition = new Vector2()
+
+    worldZoom = 1
+    zPos = 0
 
     constructor(ctx, settings = {}) {
         if(!ctx) {
@@ -31,14 +35,11 @@ export default class Liria {
         this.ctx = ctx
         this.canvas = ctx.canvas
 
-        this._mainNode = new Node()
-        this._mainNode.addComponent(new Input())
-        this._mainNode.addComponent(new Camera())
+        this._systemNode = new Node()
+        this._systemNode.addComponent(new Input())
+        this._systemNode.addComponent(new Camera())
 
-        this.addNode(this._mainNode)
-
-        this.worldPosition = new Vector2()
-        this.worldZoom = 1
+        this.addNode(this._systemNode)
     }
 
     render() {
@@ -56,6 +57,22 @@ export default class Liria {
         for (let node of this.nodes) {
             func(node)
         }
+    }
+
+    screenToWorldPos(pos) {
+        const worldPos = this.cameraPosition
+
+        const width = this.canvas.width
+        const height = this.canvas.height
+
+        const cWidth = width / this.worldZoom
+        const cHeight = height / this.worldZoom
+
+        const relativePos = new Vector2(pos.x / width, pos.y / height)
+        relativePos.x = relativePos.x * cWidth + worldPos.x * -1 / this.worldZoom
+        relativePos.y = relativePos.y * cHeight + worldPos.y * -1 / this.worldZoom
+
+        return relativePos
     }
 
     dispose() {
