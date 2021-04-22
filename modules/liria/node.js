@@ -8,6 +8,7 @@ export default class Node {
         this.transform = new Transform()
         this.addComponent(this.transform)
         this.init()
+        this.enable = true
     }
 
     init() {  }
@@ -36,12 +37,14 @@ export default class Node {
 
     _runAllComponents(func) {
         for (let comp of this._components)
-            func(comp)
+            if(comp.enable)
+                func(comp)
     }
 
     _runAllNodes(func) {
         for (let node of this._childs)
-            func(node)
+            if(node.enable)
+                func(node)
     }
 
     _render() {

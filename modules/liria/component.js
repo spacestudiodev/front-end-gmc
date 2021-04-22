@@ -3,9 +3,11 @@ import Liria from "."
 export default class Component {
     _init(node) {
         this.node = node
-        this.init()
         this.liria = Liria.get()
         this.transform = this.node.transform
+        this.enable = true
+        
+        this.init()
     }
 
     // Se llama al crear el componente y es agregado a la scena

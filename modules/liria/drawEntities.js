@@ -9,6 +9,8 @@ export default class DrawEntities extends Component {
     paths = []
 
     constructor(paths, tag, settings) {
+        super()
+        
         this.paths = paths
         this.tag = tag
 
@@ -82,6 +84,7 @@ export default class DrawEntities extends Component {
     addEntity(entity) {
         entity.init()
         this.entities.push(entity)
+        return entity
     }
 
     draw() {
@@ -89,26 +92,40 @@ export default class DrawEntities extends Component {
             canvasData = this.ctx.createImageData(cvWidth, cvHeight),
             cData = canvasData.data
 
-        for (let entity of this.entities) {
-            const epos = entity.transform.position
+        const width = this.width * this.quality
+        const height = this.height * this.quality
+        
+        let eLen = this.entities.length
 
-            for (let w = 0; w < this.width; w++) {
-                for (let h = 0; h < this.height; h++) {
-                    const rx = pos.x + w,
-                        ry = pos.y + h
-                    if(rx < cvWidth && rx > 0 &&
-                        ry < cvHeight && ry > 0) {
-                        var iData = (h * this.width + w) * 4
+        while (eLen--) {
+            const i = this.entities.length - eLen
+            const epos = this.entities[i-1].transform.worldPosition
+            
+            const w = width
+            while (w--){
+                const h = height
+                while (h--) {
+                    const rx = epos.x + w, ry = epos.y + h
+
+                    if(rx < cvWidth && rx > 0 && ry < cvHeight && ry > 0) {
+                        
+                        var iData = (h * width + w) * 4
                         var pData = (~~ rx + ~~ ry * cvWidth) * 4
 
                         cData[pData] = this.render[iData]
                         cData[pData + 1] = this.render[iData + 1]
                         cData[pData + 2] = this.render[iData + 2]
+                        
+                        if (cData[pData + 3] < 100) {
+                            cData[pData + 3] = this.render[iData + 3]
+                        }
 
                         // http://jsfiddle.net/loktar/63QZz/
                     }
                 }
             }
         }
+
+        this.ctx.putImageData(canvasData, 0, 0)
     }
 }

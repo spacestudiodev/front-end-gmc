@@ -24,7 +24,7 @@ export default class Liria {
     worldZoom = 1
     zPos = 0
 
-    constructor(ctx, settings = {}) {
+    constructor(canvas, ctx, settings = {}) {
         if(!ctx) {
             console.error("No se asigno un contexto a Liria. Abortando...")
             return
@@ -33,7 +33,7 @@ export default class Liria {
         Liria.set(this)
 
         this.ctx = ctx
-        this.canvas = ctx.canvas
+        this.canvas = canvas
 
         this._systemNode = new Node()
         this._systemNode.addComponent(new Input())

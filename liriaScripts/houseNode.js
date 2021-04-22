@@ -1,5 +1,7 @@
 import Component from "../modules/liria/component"
 import DrawablePath from "../modules/liria/drawablePath"
+import DrawEntities from "../modules/liria/drawEntities"
+import EntityNode from "../modules/liria/entity"
 import Input from "../modules/liria/Input"
 import Node from "../modules/liria/node"
 import Vector2 from "../modules/liria/vector2"
@@ -12,8 +14,14 @@ const wl = "M11.51,12.44,8.4,9.33V2.69l3.11,2.75ZM4.32,13.9,1.21,11.14v6.65L4.32
 const t = "M11.51,5.44,8.4,2.69,12.29,0l3.65,2.33ZM8.75,10.79,5.1,8.46,1.21,11.14,4.32,13.9Zm18.85-.68L24,7.78l-3.89,2.69,3.11,2.75ZM20.8,19l-3.65-2.34-3.88,2.69,3.11,2.76Z"
 
 export default class HouseNode extends Node {
+    constructor(settings = {}){
+        super()
+
+        this.scale = settings.scale || 1 
+        this.quality = settings.quality || 2
+    }
     init() {
-        this.addComponent(new DrawablePath([
+        const drawE = this.addComponent(new DrawablePath([
             {
                 path: shadow,
                 fill: "#00000033"
@@ -36,15 +44,13 @@ export default class HouseNode extends Node {
         ], "houseGroup", {
             width: 35,
             height: 31,
-            scale: 1,
-            quality: 3
+            scale: this.scale,
+            quality: this.quality
         }))
-    }
-}
 
-class FollowMouse extends Component {
-    update() {
-        const nextPos = this.liria.screenToWorldPos(Input.mousePosition)
-        this.transform.position = nextPos
+        //for (let i = 0; i < 2000; i++) {
+        //    const entity = drawE.addEntity(new EntityNode())
+        //    entity.transform.localPosition = new Vector2(Math.random() * 1000 + 100, Math.random() * 500 + 100)
+        //}
     }
 }

@@ -25,7 +25,7 @@ export default class Camera extends Component {
         this.liria.zPos += deltaY
         const nextZoom= Math.pow(1.1, this.liria.zPos)
 
-        console.log(this.liria.zPos / 6 + 14.25)
+        //console.log(this.liria.zPos / 6 + 14.25)
 
         this.liria.worldZoom = nextZoom
         const dif = this.liria.worldZoom - lastZoom

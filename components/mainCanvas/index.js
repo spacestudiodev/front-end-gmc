@@ -1,7 +1,8 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, createElement } from 'react'
 import MainScene from '../../liriaScripts/mainScene'
 import Liria from '../../modules/liria'
 import EngineBehaviour from './engine/engineBehaviour'
+import * as PIXI from 'pixi.js'
 
 export default function MainCanvas() {
     const canvasRef = useRef(null)
@@ -14,13 +15,25 @@ export default function MainCanvas() {
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
 
-        //const engine = new EngineBehaviour(ctx)
-        const liria = new Liria(ctx)
+        const liria = new Liria(canvas, ctx)
         liria.addNode(new MainScene())
 
-        const render = () => {
-            //engine.render()
+        //const texture = new PIXI.Texture.from(canvas)       
 
+        //const container = new PIXI.Container()
+        //app.stage.addChild(container)
+
+        //const canvTexture = PIXI.Sprite.from(texture)
+        //container.addChild(canvTexture)
+
+        const anim = () => {
+            liria.render()
+            //texture.update()
+        }
+
+        //app.ticker.add(anim)
+
+        const render = () => {
             liria.render()
             animationFrameId = window.requestAnimationFrame(render)            
         }
@@ -29,8 +42,6 @@ export default function MainCanvas() {
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)
-            //engine.dispose()
-
             liria.dispose()
         }
     }, [])
