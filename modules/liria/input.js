@@ -2,7 +2,7 @@ import Liria from "."
 import Component from "./component"
 import Vector2 from "./vector2"
 
-export default class Input extends Component {
+export default class Input {
     static mousePosition = new Vector2()
     static mouseMovDelta = new Vector2()
     static isClicking = false
@@ -41,26 +41,34 @@ export default class Input extends Component {
         input?._eomscroll.push(func)
     }
 
-    init() {
+    static onMouseClick(func) {
+        const input = Input.get()
+        input?._eomclick.push(func)
+    }
+
+    constructor(view) {
         Input.set(this)
 
         this._eokdown = []
         this._eokup = []
         this._eommove = []
         this._eomscroll = []
+        this._eomclick = []
 
-        this.canvas = Liria.get().canvas
+        this.view = view
 
         this.fokd = this._onkeydown.bind(this)
         this.foku = this._onkeyup.bind(this)
         this.fomm = this._onmousemove.bind(this)
         this.foms = this._onmousescroll.bind(this)
-        
+        this.fomd = this._onmousedown.bind(this)
+
         window.addEventListener("keydown", this.fokd)
         window.addEventListener("keyup", this.foku)
 
-        this.canvas.addEventListener('wheel', this.foms, { passive: true })
-        this.canvas.addEventListener("mousemove", this.fomm)
+        this.view.addEventListener('wheel', this.foms, { passive: true })
+        this.view.addEventListener("mousemove", this.fomm)
+        this.view.addEventListener('mousedown', this.fomd)
 
         Input.mousePosition = new Vector2()
         Input.mouseMovDelta = new Vector2()
@@ -94,11 +102,17 @@ export default class Input extends Component {
             func()
     }
 
+    _onmousedown() {
+        for (let func of this._eomclick)
+            func()
+    }
+
     destroy() {
         window.removeEventListener("keydown", this.fokd)
         window.removeEventListener("keyup", this.foku)
 
-        this.canvas.removeEventListener("mousemove", this.fomm)
-        this.canvas.removeEventListener("wheel", this.foms)
+        this.view.removeEventListener("mousemove", this.fomm)
+        this.view.removeEventListener("wheel", this.foms)
+        this.view.removeEventListener("mousedown", this.fomd)
     }
 }

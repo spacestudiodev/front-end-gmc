@@ -15,6 +15,7 @@ export default class Node {
 
     addComponent(comp) {
         this._components.push(comp)
+        if(comp._init)
         comp._init(this)
         return comp
     }

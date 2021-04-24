@@ -36,7 +36,7 @@ export default class Liria {
         this.canvas = canvas
 
         this._systemNode = new Node()
-        this._systemNode.addComponent(new Input())
+        this._systemNode.addComponent(new Input(this.canvas))
         this._systemNode.addComponent(new Camera())
 
         this.addNode(this._systemNode)
