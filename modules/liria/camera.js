@@ -3,6 +3,7 @@ import Component from "./component"
 import Input from "./Input"
 import {lerp} from "./mathHelper"
 import Vector2 from "./vector2"
+import * as PIXI from "pixi.js"
 
 export default class Camera {
     static main
@@ -11,15 +12,17 @@ export default class Camera {
     worldZoom = 1
     zPos = 0
 
-    constructor(container, view) {
+    constructor(container, app) {
         Camera.main = this
         this.nextZoom = 1
         this.lastScroll = 0
         this.cam = container
-        this.view = view
+        this.view = app.view
         this.speed = 0.2
 
-        //Input.onKeyDown(this.alertInfo.bind(this))
+        this.text = new PIXI.Text(this.zPos, { fontSize: 14 })
+        app.stage.addChild(this.text)
+
         Input.onMouseScroll(this.onMouseScroll.bind(this))
         Input.onMouseMove(this.onMouseMove.bind(this))
     }
@@ -40,10 +43,14 @@ export default class Camera {
 
         this.cameraPosition.x -= relativePos.x * dif
         this.cameraPosition.y -= relativePos.y * dif
+
+        console.log(this.cameraPosition.x / this.worldZoom, this.cameraPosition.y / this.worldZoom)
+        console.log(this.view.width / this.worldZoom, this.view.height / this.worldZoom)
     }
 
     update() {
         this.updateCamera()
+        this.showDebug()
     }
 
     onMouseMove() {
@@ -53,18 +60,16 @@ export default class Camera {
         this.cameraPosition.y += Input.mouseMovDelta.y
     }
 
-    alertInfo(e) {
-        if(e.key === " ")
-           console.log(this.cameraPosition)
-    }
-
     updateCamera() {
-        this.cam.position.set(
-            lerp(this.cam.position.x, this.cameraPosition.x, this.speed), 
-            lerp(this.cam.position.y, this.cameraPosition.y, this.speed))
+        const camX = lerp(this.cam.position.x, this.cameraPosition.x, this.speed)
+        const camY = lerp(this.cam.position.y, this.cameraPosition.y, this.speed)
+        this.cam.position.set(camX, camY)
 
         this.cam.scale.x = lerp(this.cam.scale.x, this.worldZoom, this.speed)
         this.cam.scale.y = lerp(this.cam.scale.y, this.worldZoom, this.speed)
+
+        this.printDebug(`Camera Position: (${(camX * -1 / this.cam.scale.x).toFixed(4)}, ${(camY * -1 / this.cam.scale.x).toFixed(4)})`)
+        this.printDebug("Camera Zoom: " + this.cam.scale.x.toFixed(4)) 
     }
 
     screenToWorldPos(pos) {
@@ -81,5 +86,14 @@ export default class Camera {
         relativePos.y = relativePos.y * cHeight + worldPos.y * -1 / this.worldZoom
 
         return relativePos
+    }
+
+    printDebug(text) {
+        this.textDebug += text + "\n"
+    }
+
+    showDebug() {
+        this.text.text = this.textDebug
+        this.textDebug = ""
     }
 }

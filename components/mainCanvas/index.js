@@ -12,11 +12,13 @@ import Input from '../../modules/liria/Input'
 import Camera from '../../modules/liria/camera'
 import {houseMapElement} from '../../elementsInMap/house'
 import PaintSprites from '../../liriaScripts/paintSprites'
+import {brena_district} from '../../districtsMaps/brena'
 
 export default function MainCanvas() {
     const canvasRef = useRef(null)
 
     useEffect(() => {
+        const brena = new SVG(brena_district)
         const perimeter = new SVG(lima_fencing_perimeter)
         const highway = new SVG(lima_fencing_highway)
         const majorRoads = new SVG(lima_fencing_major_roads)
@@ -37,18 +39,25 @@ export default function MainCanvas() {
 
         app.stage.addChild(container)
 
+        brena.position.set(355, 245)
+        container.addChild(brena)
+
         container.addChild(perimeter)
         container.addChild(highway)
         container.addChild(majorRoads)
         container.addChild(roads)
 
-        const camera = new Camera(container, app.view)
+        const camera = new Camera(container, app)
         const paint = new PaintSprites(container)
 
         app.ticker.add(() => {
             camera.update()
             paint.update()
         })
+
+        return () => {
+            input.destroy()
+        }
     
     }, [])
 
