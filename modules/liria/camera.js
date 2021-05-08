@@ -1,6 +1,6 @@
 import Liria from "."
 import Component from "./component"
-import Input from "./Input"
+import Input from "./input"
 import {lerp} from "./mathHelper"
 import Vector2 from "./vector2"
 import * as PIXI from "pixi.js"

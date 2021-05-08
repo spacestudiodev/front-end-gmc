@@ -8,7 +8,7 @@ import {
     lima_fencing_roads
 } from '../../districtsMaps/lima_fencing'
 
-import Input from '../../modules/liria/Input'
+import Input from '../../modules/liria/input'
 import Camera from '../../modules/liria/camera'
 import {houseMapElement} from '../../elementsInMap/house'
 import PaintSprites from '../../liriaScripts/paintSprites'

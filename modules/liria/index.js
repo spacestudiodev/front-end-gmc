@@ -1,6 +1,6 @@
 import Node from './node'
 import Camera from './camera'
-import Input from './Input'
+import Input from './input'
 import Vector2 from './vector2'
 
 export default class Liria {

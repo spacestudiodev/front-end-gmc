@@ -3,8 +3,8 @@ import { urlServerImages } from '../../api/server'
 import AloneButton from '../UI/AloneButton'
 import { DownloadIcon } from '../UI/svg/DownloadIcon'
 import { SharedIcon } from '../UI/svg/SharedIcon'
-import { PDFIButonsCont, PDFICont, PDFIInfoCont, PDFIItem, PDFIItemsCont } from './PDFitems.style'
-
+import { PDFIButonsCont, PDFICont, PDFIInfoCont, PDFIItem, PDFIItemsCont } from './PDFItems.style'
+ 
 const container = {
     open: {
         transition: {
