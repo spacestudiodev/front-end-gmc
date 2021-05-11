@@ -10,9 +10,9 @@ import {
 
 import Input from '../../modules/liria/input'
 import Camera from '../../modules/liria/camera'
-import {houseMapElement} from '../../elementsInMap/house'
 import PaintSprites from '../../liriaScripts/paintSprites'
 import {brena_district} from '../../districtsMaps/brena'
+import GridAPI from '../../liriaScripts/gridAPI'
 
 export default function MainCanvas() {
     const canvasRef = useRef(null)
@@ -47,6 +47,10 @@ export default function MainCanvas() {
         container.addChild(majorRoads)
         container.addChild(roads)
 
+        GridAPI.init(container, {
+            gizmos: true
+        })
+
         const camera = new Camera(container, app)
         const paint = new PaintSprites(container)
 
@@ -65,32 +69,3 @@ export default function MainCanvas() {
         <canvas ref={canvasRef} className="mainCanvas" />
     )
 }
-
-
-/*
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
-        let animationFrameId
-    
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
-
-        const liria = new Liria(canvas, ctx)
-        liria.addNode(new MainScene())
-        
-        const anim = () => {
-            liria.render()
-        }
-
-        const render = () => {
-            liria.render()
-            animationFrameId = window.requestAnimationFrame(render)            
-        }
-
-        render()
-
-        return () => {
-            window.cancelAnimationFrame(animationFrameId)
-            liria.dispose()
-        }
-*/

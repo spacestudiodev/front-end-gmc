@@ -10,10 +10,6 @@ export default class PaintSprites {
     curr = 0
 
     constructor(container) {
-        this.gridAPI = new GridAPI(container, {
-            gizmos: true
-        })
-
         this.debug = new PIXI.Text("", {fontSize: 14})
         this.debug.position.set(300, 0)
         container.parent.addChild(this.debug)
@@ -29,7 +25,7 @@ export default class PaintSprites {
             new PIXI.Texture.from("../map/treegroup.png"),
             new PIXI.Texture.from("../map/bighouseyellow.png"),
             new PIXI.Texture.from("../map/bighousewhite.png"),
-            new PIXI.Texture.from("../map/captus.png")
+            new PIXI.Texture.from("../map/captus.png"),
         ]
 
         this.sprites = []
@@ -47,6 +43,11 @@ export default class PaintSprites {
         this.container = container
 
         Input.onKeyDown(this.onKeyDown.bind(this))
+
+        this.cameraDraw = new PIXI.Graphics()
+        this.cameraDraw.lineStyle(2, 0xF70000)
+        this.cameraDraw.drawRect(400, 200, window.innerWidth - 800, window.innerHeight - 400)
+        container.parent.addChild(this.cameraDraw)
     }
 
     update() {
@@ -59,8 +60,12 @@ export default class PaintSprites {
         const camPos = Camera.main.cameraPosition
         const worldZoom = Camera.main.worldZoom
 
-        const from = new Vector2(camPos.x * -1 / worldZoom, camPos.y * -1 / worldZoom)
-        const to = new Vector2(camPos.x - window.innerWidth, camPos.y - window.innerHeight)
+        const from = new Vector2(
+            (camPos.x - 400) * -1 / worldZoom, 
+            (camPos.y - 200) * -1 / worldZoom)
+        const to = new Vector2(
+            camPos.x - window.innerWidth + 400, 
+            camPos.y - window.innerHeight + 200)
         to.x = to.x * -1 / worldZoom
         to.y = to.y * -1 / worldZoom
 
