@@ -113,6 +113,13 @@ export default class GridAPI {
         layer[ipos].push(value)
     }
 
+    /**
+     * Deuelve todos los squares que hay entre dos puntos
+     *
+     * @param {Number} zoom
+     * @param {Vector2} from
+     * @param {Vector2} to
+     */
     static getBoundsSquares(zoom, from, to) {
         const li = getLayerIndex(zoom)
         const [sfrom, sto] = [

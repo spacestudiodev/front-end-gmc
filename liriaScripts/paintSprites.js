@@ -2,7 +2,11 @@ import * as PIXI from 'pixi.js'
 import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
+import ElementNode from './elementNode'
 import GridAPI from './gridAPI'
+
+const SIMULE_WIDTH = 400
+const SIMULE_HEIGHT = 200
 
 export default class PaintSprites {
     size = 0.2
@@ -10,48 +14,39 @@ export default class PaintSprites {
     curr = 0
 
     constructor(container) {
-        this.debug = new PIXI.Text("", {fontSize: 14})
-        this.debug.position.set(300, 0)
-        container.parent.addChild(this.debug)
-        this.debugText = ""
-
-        this.lastLn = undefined
-
-        this.layerCont = new PIXI.Container()
-        container.addChild(this.layerCont)
+        this.curr = 0
 
         this.elements = [
-            new PIXI.Texture.from("../map/housegroup.png"),
-            new PIXI.Texture.from("../map/treegroup.png"),
-            new PIXI.Texture.from("../map/bighouseyellow.png"),
-            new PIXI.Texture.from("../map/bighousewhite.png"),
-            new PIXI.Texture.from("../map/captus.png"),
+            new ElementNode.from("../map/housegroup.png"),
+            new ElementNode.from("../map/treegroup.png"),
+            new ElementNode.from("../map/bighouseyellow.png"),
+            new ElementNode.from("../map/bighousewhite.png"),
+            new ElementNode.from("../map/captus.png"),
         ]
 
-        this.sprites = []
-
-        this.elements.forEach((e) => {
-            const el = new PIXI.Sprite(e)
-            el.visible = false
-            container.addChild(el)
-            this.sprites.push(el)
-            el.anchor.x = 0.5
-            el.anchor.y = 0.5
+        this.elements.forEach(e => {
+            e.visible = false
+            container.addChild(e)
+            e.anchor.x = 0.5
+            e.anchor.y = 0.5
         })
 
-        this.sprites[this.curr].visible = true
+        this.elements[this.curr].visible = true
         this.container = container
 
         Input.onKeyDown(this.onKeyDown.bind(this))
 
         this.cameraDraw = new PIXI.Graphics()
         this.cameraDraw.lineStyle(2, 0xF70000)
-        this.cameraDraw.drawRect(400, 200, window.innerWidth - 800, window.innerHeight - 400)
+        this.cameraDraw.drawRect(
+            SIMULE_WIDTH, SIMULE_HEIGHT, 
+            window.innerWidth - SIMULE_WIDTH * 2,
+            window.innerHeight - SIMULE_HEIGHT * 2)
         container.parent.addChild(this.cameraDraw)
     }
 
     update() {
-        const curr = this.sprites[this.curr]
+        const curr = this.elements[this.curr]
         const pos = Camera.main.screenToWorldPos(Input.mousePosition)
         curr.scale.x = this.size
         curr.scale.y = this.size
@@ -61,11 +56,12 @@ export default class PaintSprites {
         const worldZoom = Camera.main.worldZoom
 
         const from = new Vector2(
-            (camPos.x - 400) * -1 / worldZoom, 
-            (camPos.y - 200) * -1 / worldZoom)
+            (camPos.x - SIMULE_WIDTH) * -1 / worldZoom, 
+            (camPos.y - SIMULE_HEIGHT) * -1 / worldZoom)
         const to = new Vector2(
-            camPos.x - window.innerWidth + 400, 
-            camPos.y - window.innerHeight + 200)
+            camPos.x - window.innerWidth + SIMULE_WIDTH, 
+            camPos.y - window.innerHeight + SIMULE_HEIGHT)
+
         to.x = to.x * -1 / worldZoom
         to.y = to.y * -1 / worldZoom
 
@@ -78,23 +74,23 @@ export default class PaintSprites {
 
     onKeyDown(e) {
         if (e.key === "a" || e.key === "s") {
-            this.sprites[this.curr].visible = false
+            this.elements[this.curr].visible = false
 
             if (e.key === "a") {
                 if (this.curr === 0)
-                    this.curr = this.sprites.length - 1
+                    this.curr = this.elements.length - 1
                 else
                     this.curr--
             }
 
             if (e.key === "s") {
-                if (this.curr + 1 > this.sprites.length - 1)
+                if (this.curr + 1 > this.elements.length - 1)
                     this.curr = 0
                 else
                     this.curr++
             }
 
-            this.sprites[this.curr].visible = true
+            this.elements[this.curr].visible = true
         }
 
         if (e.key === "q")
@@ -103,14 +99,14 @@ export default class PaintSprites {
             this.size += 0.01
 
         if (e.key === " ") {
-            const svg = new PIXI.Sprite(this.elements[this.curr])
-            this.container.addChild(svg)
+            const sprite = new ElementNode.clone(this.elements[this.curr])
+            this.container.addChild(sprite)
             const pos = Camera.main.screenToWorldPos(Input.mousePosition)
-            svg.anchor.x = 0.5
-            svg.anchor.y = 0.5
-            svg.scale.x = this.size
-            svg.scale.y = this.size
-            svg.position.set(pos.x, pos.y)
+            sprite.anchor.x = 0.5
+            sprite.anchor.y = 0.5
+            sprite.scale.x = this.size
+            sprite.scale.y = this.size
+            sprite.position.set(pos.x, pos.y)
 
             GridAPI.addElement({
                 id: this.curr, 
