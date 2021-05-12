@@ -70,6 +70,7 @@ export default class Camera {
 
         this.printDebug(`Camera Position: (${(camX * -1 / this.cam.scale.x).toFixed(4)}, ${(camY * -1 / this.cam.scale.x).toFixed(4)})`)
         this.printDebug("Camera Zoom: " + this.cam.scale.x.toFixed(4)) 
+        this.printDebug(`Zoom int: ${this.zPos / 6 + 2.75}`)
     }
 
     screenToWorldPos(pos) {

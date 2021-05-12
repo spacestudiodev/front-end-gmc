@@ -104,13 +104,23 @@ export default class PaintSprites {
 
         if (e.key === " ") {
             const svg = new PIXI.Sprite(this.elements[this.curr])
-            this.layers[this.lastLn].container.addChild(svg)
+            this.container.addChild(svg)
             const pos = Camera.main.screenToWorldPos(Input.mousePosition)
             svg.anchor.x = 0.5
             svg.anchor.y = 0.5
             svg.scale.x = this.size
             svg.scale.y = this.size
             svg.position.set(pos.x, pos.y)
+
+            GridAPI.addElement({
+                id: this.curr, 
+                position: {x: pos.x, y: pos.y},
+                scale: this.size,
+            }, Camera.main.zPos, pos)
+        }
+
+        if (e.key === "e") {
+            GridAPI.printLayers()
         }
     }
 }
