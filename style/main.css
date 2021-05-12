@@ -1,0 +1,115 @@
+@font-face {
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-Medium.woff);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-SemiBold.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-Bold.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(../public/fonts/Inter/Inter-ExtraBold.woff);
+    font-weight: 700;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter';
+    font-size: 14px;
+    letter-spacing: .7px;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+.mapReference {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../public/images/map_reference.png);
+    background-size: cover;
+}
+
+.playVideo {
+    background: linear-gradient(90deg,
+            rgba(79, 45, 90, 0.5634628851540616) 0%,
+            rgba(79, 45, 90, 0.927608543417367) 32%,
+            rgba(79, 45, 90, 1) 100%),
+        url("/images/buttonbackgroundplay.png") no-repeat center;
+    background-size: cover;
+}
+
+.backButton {
+    width: 100px;
+    height: 55px;
+    background-color: white;
+    border-radius: 15px;
+    position: absolute;
+    right: 0;
+    transform: translateY(-55px);
+    transition: transform 400ms;
+}
+
+.backButton>div {
+    width: 15px;
+    height: 15px;
+}
+
+.backButton p {
+    color: #2D1B32;
+}
+
+.backButton img {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
+.nextButton {
+    width: 123px;
+    height: 40px;
+    background-color: #F8EB22;
+    border-radius: 10px;
+    left: 0;
+    right: auto;
+}
+
+.nextButton p {
+    left: 15px;
+    position: absolute;
+    font-weight: 600;
+}
+
+.nextButton>div {
+    position: absolute;
+    right: 12px;
+    margin: 0;
+}
+
+.btborder {
+    border: 1px solid;
+    border-radius: 13px;
+}
+
+.brd-yellow {
+    border-color: #F8EB22;
+}
+
+.brd-white {
+    border-color: white;
+}
