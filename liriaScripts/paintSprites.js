@@ -1,7 +1,7 @@
 import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
-import ElementNode from './elementNode'
+import ElementNode, {elementsDefault} from './elementNode'
 
 export default class PaintSprites {
     size = 0.2
@@ -11,13 +11,7 @@ export default class PaintSprites {
     constructor(container) {
         this.curr = 0
 
-        this.elements = [
-            ElementNode.from("../map/housegroup.png"),
-            ElementNode.from("../map/treegroup.png"),
-            ElementNode.from("../map/bighouseyellow.png"),
-            ElementNode.from("../map/bighousewhite.png"),
-            ElementNode.from("../map/captus.png"),
-        ]
+        this.elements = elementsDefault
 
         this.elements.forEach(e => {
             e.visible = false

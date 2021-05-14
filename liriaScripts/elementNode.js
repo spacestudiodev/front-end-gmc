@@ -40,3 +40,11 @@ export default class ElementNode extends PIXI.Sprite {
         return new ElementNode(new PIXI.Texture.from(texturePath), interactive)
     }
 }
+
+export const elementsDefault = [
+    ElementNode.from("../map/housegroup.png"),
+    ElementNode.from("../map/treegroup.png"),
+    ElementNode.from("../map/bighouseyellow.png"),
+    ElementNode.from("../map/bighousewhite.png"),
+    ElementNode.from("../map/captus.png"),
+]
