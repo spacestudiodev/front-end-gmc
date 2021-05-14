@@ -1,12 +1,7 @@
-import * as PIXI from 'pixi.js'
 import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
 import ElementNode from './elementNode'
-import GridAPI from './gridAPI'
-
-const SIMULE_WIDTH = 400
-const SIMULE_HEIGHT = 200
 
 export default class PaintSprites {
     size = 0.2
@@ -35,17 +30,6 @@ export default class PaintSprites {
         this.container = container
 
         Input.onKeyDown(this.onKeyDown.bind(this))
-
-        // --- DEBUG ---
-        // --- Dibujo de camara simulada ---
-        this.cameraDraw = new PIXI.Graphics()
-        this.cameraDraw.lineStyle(2, 0xF70000)
-        this.cameraDraw.drawRect(
-            SIMULE_WIDTH, SIMULE_HEIGHT, 
-            window.innerWidth - SIMULE_WIDTH * 2,
-            window.innerHeight - SIMULE_HEIGHT * 2)
-        container.parent.addChild(this.cameraDraw)
-        // --- ---
     }
 
     update() {
@@ -54,21 +38,6 @@ export default class PaintSprites {
         curr.scale.x = this.size
         curr.scale.y = this.size
         curr.position.set(pos.x, pos.y)
-
-        const camPos = Camera.main.cameraPosition
-        const worldZoom = Camera.main.worldZoom
-
-        const from = new Vector2(
-            (camPos.x - SIMULE_WIDTH) * -1 / worldZoom, 
-            (camPos.y - SIMULE_HEIGHT) * -1 / worldZoom)
-        const to = new Vector2(
-            camPos.x - window.innerWidth + SIMULE_WIDTH, 
-            camPos.y - window.innerHeight + SIMULE_HEIGHT)
-
-        to.x = to.x * -1 / worldZoom
-        to.y = to.y * -1 / worldZoom
-
-        GridAPI.updateGizmos(Camera.main.zPos, from, to)
     }
 
     printDebug(string) {
@@ -102,7 +71,7 @@ export default class PaintSprites {
             this.size += 0.01
 
         if (e.key === " ") {
-            const sprite = ElementNode.clone(this.elements[this.curr])
+            const sprite = ElementNode.clone(this.elements[this.curr], true)
             this.container.addChild(sprite)
             const pos = Camera.main.screenToWorldPos(Input.mousePosition)
             sprite.anchor.x = 0.5
@@ -112,7 +81,7 @@ export default class PaintSprites {
             sprite.position.set(pos.x, pos.y)
 
             GridAPI.addElement({
-                id: this.curr, 
+                id: this.curr,
                 position: {x: pos.x, y: pos.y},
                 scale: this.size,
             }, Camera.main.zPos, pos)

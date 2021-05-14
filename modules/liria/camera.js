@@ -1,9 +1,11 @@
-import Liria from "."
-import Component from "./component"
 import Input from "./input"
 import {lerp} from "./mathHelper"
 import Vector2 from "./vector2"
 import * as PIXI from "pixi.js"
+import GridAPI from "../../liriaScripts/gridAPI"
+
+const SIMULE_WIDTH = 400
+const SIMULE_HEIGHT = 100
 
 export default class Camera {
     static main
@@ -25,6 +27,17 @@ export default class Camera {
 
         Input.onMouseScroll(this.onMouseScroll.bind(this))
         Input.onMouseMove(this.onMouseMove.bind(this))
+
+        // --- DEBUG ---
+        // --- Dibujo de camara simulada ---
+        this.cameraDraw = new PIXI.Graphics()
+        this.cameraDraw.lineStyle(2, 0xF70000)
+        this.cameraDraw.drawRect(
+            SIMULE_WIDTH, SIMULE_HEIGHT, 
+            window.innerWidth - SIMULE_WIDTH * 2,
+            window.innerHeight - SIMULE_HEIGHT * 2)
+        container.parent.addChild(this.cameraDraw)
+        // --- ---
     }
 
     onMouseScroll() {
@@ -43,9 +56,6 @@ export default class Camera {
 
         this.cameraPosition.x -= relativePos.x * dif
         this.cameraPosition.y -= relativePos.y * dif
-
-        console.log(this.cameraPosition.x / this.worldZoom, this.cameraPosition.y / this.worldZoom)
-        console.log(this.view.width / this.worldZoom, this.view.height / this.worldZoom)
     }
 
     update() {
@@ -96,5 +106,20 @@ export default class Camera {
     showDebug() {
         this.text.text = this.textDebug
         this.textDebug = ""
+
+        const camPos = this.cameraPosition
+        const worldZoom = this.worldZoom
+
+        const from = new Vector2(
+            (camPos.x - SIMULE_WIDTH) * -1 / worldZoom, 
+            (camPos.y - SIMULE_HEIGHT) * -1 / worldZoom)
+        const to = new Vector2(
+            camPos.x - window.innerWidth + SIMULE_WIDTH, 
+            camPos.y - window.innerHeight + SIMULE_HEIGHT)
+
+        to.x = to.x * -1 / worldZoom
+        to.y = to.y * -1 / worldZoom
+
+        GridAPI.updateGizmos(this.zPos, from, to)
     }
 }
