@@ -6,7 +6,7 @@ export default class ElementNode extends PIXI.Sprite {
     }
 
     /**
-     * clone.
+     * Clona un elemento
      *
      * @param {PIXI.Sprite} sprite
      */
@@ -14,6 +14,11 @@ export default class ElementNode extends PIXI.Sprite {
         return new ElementNode(sprite.texture)
     }
 
+    /**
+     * Crea un elemento con la ruta de una imagen
+     *
+     * @param {string} texturePath
+     */
     static from(texturePath) {
         return new ElementNode(new PIXI.Texture.from(texturePath))
     }

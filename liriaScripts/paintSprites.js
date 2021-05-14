@@ -17,11 +17,11 @@ export default class PaintSprites {
         this.curr = 0
 
         this.elements = [
-            new ElementNode.from("../map/housegroup.png"),
-            new ElementNode.from("../map/treegroup.png"),
-            new ElementNode.from("../map/bighouseyellow.png"),
-            new ElementNode.from("../map/bighousewhite.png"),
-            new ElementNode.from("../map/captus.png"),
+            ElementNode.from("../map/housegroup.png"),
+            ElementNode.from("../map/treegroup.png"),
+            ElementNode.from("../map/bighouseyellow.png"),
+            ElementNode.from("../map/bighousewhite.png"),
+            ElementNode.from("../map/captus.png"),
         ]
 
         this.elements.forEach(e => {
@@ -36,6 +36,8 @@ export default class PaintSprites {
 
         Input.onKeyDown(this.onKeyDown.bind(this))
 
+        // --- DEBUG ---
+        // --- Dibujo de camara simulada ---
         this.cameraDraw = new PIXI.Graphics()
         this.cameraDraw.lineStyle(2, 0xF70000)
         this.cameraDraw.drawRect(
@@ -43,6 +45,7 @@ export default class PaintSprites {
             window.innerWidth - SIMULE_WIDTH * 2,
             window.innerHeight - SIMULE_HEIGHT * 2)
         container.parent.addChild(this.cameraDraw)
+        // --- ---
     }
 
     update() {
@@ -99,7 +102,7 @@ export default class PaintSprites {
             this.size += 0.01
 
         if (e.key === " ") {
-            const sprite = new ElementNode.clone(this.elements[this.curr])
+            const sprite = ElementNode.clone(this.elements[this.curr])
             this.container.addChild(sprite)
             const pos = Camera.main.screenToWorldPos(Input.mousePosition)
             sprite.anchor.x = 0.5

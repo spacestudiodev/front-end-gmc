@@ -107,7 +107,7 @@ export default class Input {
             func()
     }
 
-    destroy() {
+    dispose() {
         window.removeEventListener("keydown", this.fokd)
         window.removeEventListener("keyup", this.foku)
 
