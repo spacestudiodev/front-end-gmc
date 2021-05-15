@@ -1,7 +1,9 @@
 import {Application} from "@pixi/app";
 import {Container} from "@pixi/display"
 
-import { SVG } from 'pixi-svg'
+import dat from 'dat.gui'
+
+import { SVG } from '../modules/pixi-svg'
 import {
     lima_fencing_highway, 
     lima_fencing_major_roads, 
@@ -15,6 +17,10 @@ import Input from "../modules/liria/input";
 import GridAPI from "./gridAPI";
 import PaintSprites from "./paintSprites";
 import DrawSystem from "./drawSystem";
+
+const datUI = new dat.GUI({name: "Debug"})
+
+export {datUI}
 
 export default class MainScene extends Container{
     /**
@@ -50,7 +56,6 @@ export default class MainScene extends Container{
         const paint = new PaintSprites(this)
         app.stage.addChild(new DrawSystem())
 
-
         app.ticker.add(() => {
             camera.update()
             paint.update()
@@ -58,6 +63,7 @@ export default class MainScene extends Container{
 
         this.dispose = () => {
             input.dispose()
+            datUI.destroy() 
         }
     }
 

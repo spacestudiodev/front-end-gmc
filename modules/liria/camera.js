@@ -3,9 +3,16 @@ import {lerp} from "./mathHelper"
 import Vector2 from "./vector2"
 import * as PIXI from "pixi.js"
 import GridAPI from "../../liriaScripts/gridAPI"
+import {datUI} from "../../liriaScripts/mainScene"
 
-const SIMULE_WIDTH = 400
-const SIMULE_HEIGHT = 100
+const PARAMS = {
+    simule_width: 400,
+    simule_height: 100,
+    position_x: 0.1,
+    position_y: 0.1,
+    camera_zoom: 0.001,
+    zoom: 0.01
+}
 
 export default class Camera {
     static main
@@ -31,12 +38,25 @@ export default class Camera {
         // --- DEBUG ---
         // --- Dibujo de camara simulada ---
         this.cameraDraw = new PIXI.Graphics()
-        this.cameraDraw.lineStyle(2, 0xF70000)
-        this.cameraDraw.drawRect(
-            SIMULE_WIDTH, SIMULE_HEIGHT, 
-            window.innerWidth - SIMULE_WIDTH * 2,
-            window.innerHeight - SIMULE_HEIGHT * 2)
         container.parent.addChild(this.cameraDraw)
+        // --- ---
+        // --- Parametros de camara ---
+
+        const cameraFolder = datUI.addFolder("Camera")
+
+        this.cameraParams = cameraFolder.addFolder("Params")
+        this.cameraParams.add(PARAMS, "position_x").name("X")
+        this.cameraParams.add(PARAMS, "position_y").name("Y")
+        this.cameraParams.add(PARAMS, "camera_zoom").name("Camera Zoom")
+        this.cameraParams.add(PARAMS, "zoom").name("Zoom")
+        this.cameraParams.open()
+
+        const simulationFolder = cameraFolder.addFolder("Camera Simulation")
+        simulationFolder.add(PARAMS, "simule_width", 0, 500).name("Width")
+        simulationFolder.add(PARAMS, "simule_height", 0, 500).name("Height")
+
+        cameraFolder.open()
+
         // --- ---
     }
 
@@ -78,9 +98,13 @@ export default class Camera {
         this.cam.scale.x = lerp(this.cam.scale.x, this.worldZoom, this.speed)
         this.cam.scale.y = lerp(this.cam.scale.y, this.worldZoom, this.speed)
 
-        this.printDebug(`Camera Position: (${(camX * -1 / this.cam.scale.x).toFixed(4)}, ${(camY * -1 / this.cam.scale.x).toFixed(4)})`)
-        this.printDebug("Camera Zoom: " + this.cam.scale.x.toFixed(4)) 
-        this.printDebug(`Zoom int: ${this.zPos / 6 + 2.75}`)
+        // [DEBUG]
+        PARAMS.position_x = (camX * -1 / this.cam.scale.x)
+        PARAMS.position_y = (camY * -1 / this.cam.scale.y)
+        PARAMS.camera_zoom = this.cam.scale.x
+        PARAMS.zoom = this.zPos / 6 + 2.75
+        this.cameraParams.updateDisplay()
+        // ----
     }
 
     screenToWorldPos(pos) {
@@ -109,6 +133,17 @@ export default class Camera {
 
         const camPos = this.cameraPosition
         const worldZoom = this.worldZoom
+
+        const SIMULE_WIDTH = PARAMS.simule_width
+        const SIMULE_HEIGHT = PARAMS.simule_height
+
+        this.cameraDraw.clear()
+        this.cameraDraw.lineStyle(2, 0xF70000)
+
+        this.cameraDraw.drawRect(
+            SIMULE_WIDTH, SIMULE_HEIGHT, 
+            window.innerWidth - SIMULE_WIDTH * 2,
+            window.innerHeight - SIMULE_HEIGHT * 2)
 
         const from = new Vector2(
             (camPos.x - SIMULE_WIDTH) * -1 / worldZoom, 
