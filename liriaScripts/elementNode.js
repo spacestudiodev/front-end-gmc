@@ -47,4 +47,5 @@ export const elementsDefault = [
     ElementNode.from("../map/bighouseyellow.png"),
     ElementNode.from("../map/bighousewhite.png"),
     ElementNode.from("../map/captus.png"),
+    ElementNode.from("../map/edificiowhite.png"),
 ]

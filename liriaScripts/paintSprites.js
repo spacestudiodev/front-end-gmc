@@ -2,6 +2,8 @@ import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
 import ElementNode, {elementsDefault} from './elementNode'
+import GridAPI from "./gridAPI"
+import {datUI} from "./mainScene"
 
 export default class PaintSprites {
     size = 0.2
@@ -10,6 +12,8 @@ export default class PaintSprites {
 
     constructor(container) {
         this.curr = 0
+
+        this.dat = datUI
 
         this.elements = elementsDefault
 
