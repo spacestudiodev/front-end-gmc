@@ -1,0 +1,7 @@
+-- Ayuda a pintar mejor -- 
+✓ Utilizar DatGUI
+✓ History
+Mostrar capa actual
+Fijar capa
+Mostrar/Ocultar capas no activas
+Mostrar siguiente y anterior elemento
