@@ -110,7 +110,21 @@ export default class GridAPI {
 
         if (!layer[ipos]) layer[ipos] = []
 
-        layer[ipos].push(value)
+        const id = layer[ipos].push(value)
+
+        return [ipos, id - 1]
+    }
+
+    static _removeElementInSquare(li, ipos, id) {
+        const layer = GridAPI.main.layers[li]
+
+        if(!layer) return
+        if(!layer[ipos]) return
+        if(layer[ipos].length <= id) return
+
+        layer[ipos][id].sprite.destroy()
+
+        layer[ipos].splice(id, 1)
     }
 
     /**
@@ -141,12 +155,21 @@ export default class GridAPI {
     static addElement(el, zoom, pos) {
         const li = getLayerIndex(zoom)
         const {x, y} = getNearestSquare(li, pos)
-        this._addElementInSquare(li, x, y, el)
+        const [ipos, id] = this._addElementInSquare(li, x, y, el)
+
+        return {li, ipos, id}
+    }
+
+    static removeElement(data) {
+        this._removeElementInSquare(data.li, data.ipos, data.id)
     }
 
     static printLayers() {
         const layers = GridAPI.main.layers
-        window.open("data:application/json;charset=utf-8,"+JSON.stringify(layers), "", "_blank")
+        window.open("data:application/json;charset=utf-8,"+JSON.stringify(layers, (key, value) => {
+            if(key !== "sprite")
+                return value
+        }), "", "_blank")
     }
 
     static updateGizmos(zoom, from, to) {

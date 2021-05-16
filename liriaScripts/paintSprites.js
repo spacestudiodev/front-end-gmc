@@ -5,6 +5,9 @@ import ElementNode, {elementsDefault} from './elementNode'
 import GridAPI from "./gridAPI"
 import {datUI} from "./mainScene"
 
+
+const BUFFER_HISTORY = 20
+
 export default class PaintSprites {
     size = 0.2
     position = new Vector2()
@@ -12,6 +15,7 @@ export default class PaintSprites {
 
     constructor(container) {
         this.curr = 0
+        this.history = []
 
         this.dat = datUI
 
@@ -68,6 +72,15 @@ export default class PaintSprites {
         else if (e.key === "w")
             this.size += 0.01
 
+        if (e.key === "u") {
+            const length = this.history.length
+            if (length > 0) {
+                const dataH = this.history[length - 1]
+                GridAPI.removeElement(dataH)
+                this.history.splice(length - 1, 1)
+            }
+        }
+
         if (e.key === " ") {
             const sprite = ElementNode.clone(this.elements[this.curr], true)
             this.container.addChild(sprite)
@@ -78,11 +91,17 @@ export default class PaintSprites {
             sprite.scale.y = this.size
             sprite.position.set(pos.x, pos.y)
 
-            GridAPI.addElement({
+            const el = GridAPI.addElement({
                 id: this.curr,
                 position: {x: pos.x, y: pos.y},
                 scale: this.size,
+                sprite: sprite,
             }, Camera.main.zPos, pos)
+
+            this.history.push(el)
+
+            if(this.history.length > BUFFER_HISTORY)
+                this.history.splice(0, 1)
         }
 
         if (e.key === "e") {
