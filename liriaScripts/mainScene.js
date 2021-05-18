@@ -52,8 +52,8 @@ export default class MainScene extends Container{
             gizmos: true
         })
 
-        const camera = new Camera(this, app)
         const paint = new PaintSprites(this)
+        const camera = new Camera(this, app)
         app.stage.addChild(new DrawSystem())
 
         app.ticker.add(() => {

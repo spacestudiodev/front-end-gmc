@@ -14,3 +14,7 @@ export function getDif(a, b){
 
     return result
 }
+
+export function clamp (current, min, max) {
+    return Math.min(Math.max(current, min), max)
+}

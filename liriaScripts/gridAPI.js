@@ -1,16 +1,22 @@
 import * as PIXI from 'pixi.js'
 import Vector2 from "../modules/liria/vector2"
+import {datUI} from './mainScene'
+import brena from '../public/map/json/brena_full'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 150
 // Cantidad de capas
-const LAYERS_COUNT = 1
+const LAYERS_COUNT = 2
 // Diferencia del zoom entre capas
-const ZOOM_DIF_LAYERS = 13
+const ZOOM_DIF_LAYERS = 8
 // Inicion del Zoom
-const ZOOM_START = 0
+const ZOOM_START = -1.5 * 6
 // Area de la Grid
 const AREA_GRID = new Vector2(1200, 700)
+// Parametros
+const PARAMS = {
+    last_layer: 0,
+}
 
 // -------
 // Helper functions
@@ -25,10 +31,6 @@ function getLengthGrid(ssize) {
         Math.ceil(AREA_GRID.x / ssize),
         Math.ceil(AREA_GRID.y / ssize)
     ]
-}
-
-function getLayerIndex(zoom) {
-    return parseInt(zoom / ZOOM_DIF_LAYERS)
 }
 
 function getSquareSize(li = 0) {
@@ -71,7 +73,7 @@ export default class GridAPI {
     constructor(container, settings = {}) {
         GridAPI.main = this
 
-        this.layers = {}
+        this.layers = {...brena}
         this.settings = settings
 
         this.gizmos = new PIXI.Graphics()
@@ -84,6 +86,10 @@ export default class GridAPI {
         container.addChild(this.gizmos)
 
         this.container = container
+        this.debug = datUI.addFolder("Grid API")
+        this.debug.open()
+
+        this.debug.add(PARAMS, "last_layer").name("Current layer")
     }
 
     static init(container, settings = {}) {
@@ -118,13 +124,17 @@ export default class GridAPI {
     static _removeElementInSquare(li, ipos, id) {
         const layer = GridAPI.main.layers[li]
 
-        if(!layer) return
-        if(!layer[ipos]) return
-        if(layer[ipos].length <= id) return
+        if (!layer) return
+        if (!layer[ipos]) return
+        if (layer[ipos].length <= id) return
 
         layer[ipos][id].sprite.destroy()
 
         layer[ipos].splice(id, 1)
+    }
+
+    static getLayerIndex(zoom) {
+        return parseInt(zoom / ZOOM_DIF_LAYERS)
     }
 
     /**
@@ -135,7 +145,7 @@ export default class GridAPI {
      * @param {Vector2} to
      */
     static getBoundsSquares(zoom, from, to) {
-        const li = getLayerIndex(zoom)
+        const li = this.getLayerIndex(zoom)
         const [sfrom, sto] = [
             getNearestSquare(li, from),
             getNearestSquare(li, to, true)]
@@ -153,7 +163,7 @@ export default class GridAPI {
     }
 
     static addElement(el, zoom, pos) {
-        const li = getLayerIndex(zoom)
+        const li = this.getLayerIndex(zoom)
         const {x, y} = getNearestSquare(li, pos)
         const [ipos, id] = this._addElementInSquare(li, x, y, el)
 
@@ -166,22 +176,31 @@ export default class GridAPI {
 
     static printLayers() {
         const layers = GridAPI.main.layers
-        window.open("data:application/json;charset=utf-8,"+JSON.stringify(layers, (key, value) => {
-            if(key !== "sprite")
+        const json = JSON.stringify(layers, (key, value) => {
+            if (key !== "sprite")
                 return value
-        }), "", "_blank")
+        })
+
+        const w = window.open("", "", "_blank")
+        w.document.write(json)
     }
 
     static updateGizmos(zoom, from, to) {
+        zoom -= ZOOM_START
         const main = this.main
         if (!main.settings.gizmos) return
 
-        let li = getLayerIndex(zoom)
+        let li = this.getLayerIndex(zoom)
 
         if (li > LAYERS_COUNT)
             li = LAYERS_COUNT
         else if (li < 0)
             li = 0
+
+        if (li !== PARAMS.last_layer) {
+            PARAMS.last_layer = li
+            main.debug.updateDisplay()
+        }
 
         const ssize = getSquareSize(li)
 

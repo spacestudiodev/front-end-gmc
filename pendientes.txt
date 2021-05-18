@@ -1,7 +1,16 @@
 -- Ayuda a pintar mejor -- 
 ✓ Utilizar DatGUI
 ✓ History
-Mostrar capa actual
-Fijar capa
-Mostrar/Ocultar capas no activas
-Mostrar siguiente y anterior elemento
+✓ Mostrar capa actual
+✓ Repara la simulacion
+
+-- Sistema de pintado --
+Mostrar Elementos desde un array
+
+
+
+-- PARAMETROS IMPORTANTES --
+TAMAÑO_MINIMO_DE_LA_CASITA = 0.13
+TAMAÑO_MINIMO_DEL_ARBOL = 0.23
+ZOOM_MINIMO = 1.25
+ZOOM_MAXIMO = 6
