@@ -94,12 +94,14 @@ export default class PaintSprites {
             sprite.anchor.y = 0.5
             sprite.scale.x = this.size
             sprite.scale.y = this.size
+            pos.x = parseFloat(pos.x.toFixed(3))
+            pos.y = parseFloat(pos.y.toFixed(3))
             sprite.position.set(pos.x, pos.y)
 
             const el = GridAPI.addElement({
                 id: this.curr,
-                position: {x: pos.x, y: pos.y},
-                scale: this.size.toFixed(2),
+                pos: {x: pos.x, y: pos.y},
+                scale: parseFloat(this.size.toFixed(2)),
                 sprite: sprite,
             }, Camera.main.zPos, pos)
 

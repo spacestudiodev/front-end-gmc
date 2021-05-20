@@ -74,6 +74,8 @@ export default class GridAPI {
         GridAPI.main = this
 
         this.layers = {...brena}
+        this._sprites = {}
+
         this.settings = settings
 
         this.gizmos = new PIXI.Graphics()
@@ -105,7 +107,7 @@ export default class GridAPI {
         return result
     }
 
-    static _addElementInSquare(li, x, y, value) {
+    static _addElementInSquare(li, x, y, el) {
         const [xlength] = getLengthGrid(getSquareSize(li))
         const layers = GridAPI.main.layers
 
@@ -116,9 +118,10 @@ export default class GridAPI {
 
         if (!layer[ipos]) layer[ipos] = []
 
-        const id = layer[ipos].push(value)
+        const id = layer[ipos].push(el.id, el.pos.x, el.pos.y, el.scale, []) - 5
+        GridAPI.main._sprites[`${li}.${ipos}.${id}`] = el.sprite
 
-        return [ipos, id - 1]
+        return [ipos, id]
     }
 
     static _removeElementInSquare(li, ipos, id) {
@@ -128,9 +131,15 @@ export default class GridAPI {
         if (!layer[ipos]) return
         if (layer[ipos].length <= id) return
 
-        layer[ipos][id].sprite.destroy()
+        console.log(id, layer[ipos].length)
+        layer[ipos].splice(id, 5)
 
-        layer[ipos].splice(id, 1)
+        const sprites = GridAPI.main._sprites
+        const pathSprite = `${li}.${ipos}.${id}`
+        if (sprites[pathSprite]) {
+            sprites[pathSprite].destroy()
+            delete sprites[pathSprite]
+        }
     }
 
     static getLayerIndex(zoom) {
@@ -176,9 +185,11 @@ export default class GridAPI {
 
     static printLayers() {
         const layers = GridAPI.main.layers
+
         const json = JSON.stringify(layers, (key, value) => {
-            if (key !== "sprite")
+            if (key !== "sprite") {
                 return value
+            }
         })
 
         const w = window.open("", "", "_blank")
