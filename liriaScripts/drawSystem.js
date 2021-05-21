@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import ElementNode, {elementsDefault} from './elementNode'
+import GridAPI from './gridAPI'
 
 export default class DrawSystem extends PIXI.Container {
     /** @typeof {DrawSystem}*/
@@ -9,6 +10,7 @@ export default class DrawSystem extends PIXI.Container {
         super()
         DrawSystem.main = this
         this.buffer = new BufferSystem()
+        this.ids = {}
     }
 
     /**
@@ -33,37 +35,71 @@ export default class DrawSystem extends PIXI.Container {
             }
         })
     }
+
+    add(li, x, y) {
+        const elements = GridAPI._getSquare(li, x, y)
+        for (let i = 0; i < elements.length; i = i + 5) {
+            const elid = elements[i]
+            const xpos = elements[i + 1]
+            const ypos = elements[i + 2]
+            const scale = elements[i + 3]
+
+            const dataBuff = this.buffer.use(elid, this)
+            dataBuff.el.position.set(xpos, ypos)
+            dataBuff.el.scale.x = dataBuff.el.scale.y = scale
+            dataBuff.el.visible = true
+
+            const path = `${li}.${x}.${y}`
+            if (!this.ids[path]) this.ids[path] = []
+            this.ids[path].push({elid: dataBuff.elid, id: dataBuff.id})
+        }
+    }
+
+    delete(li, x, y) {
+        const idate = this.ids[`${li}.${x}.${y}`]
+
+        if (idate) {
+            for (let i = 0; i < idate.length; i++) {
+                this.buffer.restore(idate[i].elid, idate[i].id)
+            }
+            this.ids[`${li}.${x}.${y}`] = []
+        }
+    }
 }
 
 class BufferSystem {
     constructor() {
         this.queue = {}
         this.inUse = {}
+        this.ids = []
         this.count = 0
     }
 
     restore(elid, id) {
-        this.queue[elid][id] = this.inUse[id]
+        this.inUse[id].visible = false
+        this.queue[elid].push(this.inUse[id])
         delete this.inUse[id]
+        this.ids.push(id)
     }
 
     use(elid, cont) {
-        let id = 0
-        if (!this.queue[elid]) this.queue[elid] = {}
+        if (this.ids.length === 0) this.ids.push(this.count++)
+        let id = this.ids[0]
 
-        if (Object.keys(this.queue[elid]).length === 0) {
-            this.queue[elid][this.count + 1] = this.createNewElement(elid, cont)
-            id = this.count
-        }
+        if (!this.queue[elid]) this.queue[elid] = []
 
-        const el = this.inUse[id] = this.queue[elid][id]
-        delete this.queue[elid][id]
+        if (this.queue[elid].length === 0)
+            this.queue[elid].push(this.createNewElement(elid, cont))
+
+        const el = this.inUse[id] = this.queue[elid][0]
+
+        this.queue[elid].splice(0, 1)
+        this.ids.splice(0, 1)
 
         return {id, elid, el}
     }
 
     createNewElement(id, cont) {
-        this.count++
         const el = ElementNode.clone(elementsDefault[id])
         cont.addChild(el)
         el.anchor.x = 0.5

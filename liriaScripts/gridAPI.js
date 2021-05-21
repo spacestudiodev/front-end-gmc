@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import Vector2 from "../modules/liria/vector2"
 import {datUI} from './mainScene'
 import brena from '../public/map/json/brena_full'
+import DrawSystem from './drawSystem'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 150
@@ -16,6 +17,7 @@ const AREA_GRID = new Vector2(1200, 700)
 // Parametros
 const PARAMS = {
     last_layer: 0,
+    gizmos: true
 }
 
 // -------
@@ -121,6 +123,7 @@ export default class GridAPI {
         this._sprites = {}
 
         this.settings = settings
+        PARAMS.gizmos = settings.gizmos
 
         this.gizmos = new PIXI.Graphics()
         this.gizmos.lineStyle(1, 0x000000, 0.13)
@@ -136,6 +139,10 @@ export default class GridAPI {
         this.debug.open()
 
         this.debug.add(PARAMS, "last_layer").name("Current layer")
+        this.debug.add(PARAMS, "gizmos").name("Gizmos").onChange(val => {
+            PARAMS.gizmos = val
+            this.gizmos.clear()
+        })
     }
 
     static init(container, settings = {}) {
@@ -268,7 +275,7 @@ export default class GridAPI {
             || main.lastTo.x !== sto.x || main.lastTo.y !== sto.y
 
         if (changed) {
-            if (main.settings.gizmos) {
+            if (PARAMS.gizmos) {
                 main.gizmos.clear()
                 main.gizmos.lineStyle(1.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
             }
@@ -276,12 +283,12 @@ export default class GridAPI {
             if (main.lastLn !== li) {
                 for (let x = sfrom.x; x < sto.x; x++)
                     for (let y = sfrom.y; y < sto.y; y++) {
-                        if (main.settings.gizmos)
+                        if (PARAMS.gizmos)
                             main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
                     }
             }
             else {
-                if (main.settings.gizmos)
+                if (PARAMS.gizmos)
                     main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
 
                 const diffFrom = new Vector2(sfrom.x - main.lastFrom.x, sfrom.y - main.lastFrom.y)
@@ -290,20 +297,22 @@ export default class GridAPI {
                 // Pintar el recuadro sin cambios [Only Debug]
                 for (let x = sfrom.x - diffFrom.x; x < sto.x - diffTo.x; x++)
                     for (let y = sfrom.y - diffFrom.y; y < sto.y - diffTo.y; y++) {
-                        if (main.settings.gizmos)
+                        if (PARAMS.gizmos)
                             main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
                     }
 
-                if (main.settings.gizmos)
+                if (PARAMS.gizmos)
                     main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x8F32A6, 1)
 
                 // Pintar recuadro eliminado
                 diffInGrid(main.lastFrom, main.lastTo, sfrom, sto, (x, y) => {
-                    if (main.settings.gizmos)
+                    if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+
+                    DrawSystem.main.delete(li, x, y)
                 })
 
-                if (main.settings.gizmos)
+                if (PARAMS.gizmos)
                     main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x39DE20, 1)
 
                 // Pintar nuevo recuadro
@@ -311,8 +320,10 @@ export default class GridAPI {
                 const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
 
                 diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => {
-                    if (main.settings.gizmos)
+                    if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+
+                    DrawSystem.main.add(li, x, y)
                 })
             }
 
