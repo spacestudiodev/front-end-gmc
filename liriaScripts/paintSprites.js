@@ -1,6 +1,7 @@
 import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
+import DrawSystem from "./drawSystem"
 import ElementNode, {elementsDefault} from './elementNode'
 import GridAPI from "./gridAPI"
 import {datUI} from "./mainScene"
@@ -113,6 +114,11 @@ export default class PaintSprites {
 
         if (e.key === "e") {
             GridAPI.printLayers()
+        }
+        
+        if(e.key === "d") {
+            const {from, to} = Camera.main.getFromToCamera()
+            DrawSystem.main.draw(GridAPI.getBoundsSquares(Camera.main.zPos, from, to))
         }
     }
 }

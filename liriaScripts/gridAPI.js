@@ -62,6 +62,50 @@ function getNearestSquare(li, pos, end = false) {
     return _pos
 }
 
+function diffInGrid(from1, to1, from2, to2, callback) {
+    // Punto de partida el la x del primer recuadro
+    let x = from1.x
+    // Que se repita hasta llegar al final en x de ese recuadro
+    while (x < to1.x) {
+        // Verificamos si la x esta dentro de la x del segundo recuadro
+        const inX = x >= from2.x && x < to2.x
+
+        // Me verificara si habra algun cuadro en la columna de x
+        let existY = false
+        let y = from1.y
+        while (y < to1.y) {
+            const inY = y >= from2.y && y < to2.y
+
+            // Verificamos si (x, y) estan dentro del segundo recuadro
+            if (inX & inY) {
+                // Situamos la (y) en el ultimo cuadro (y) del segundo recuadro
+                // Esto con la intencion de siguir pintando si el primer recuadro es mas
+                // grande que el primer recuadro.
+                y = to2.y
+                continue;
+            }
+
+            if (callback)
+                callback(x, y)
+
+            y++
+            existY = true
+        }
+
+        // Verificamos si x esta dentro del segundo recuadro
+        // y si en la columna no habia ningun cuadro en uso 
+        if (!existY && inX) {
+            // Situamos la (x) en el ultimo cuadro (x) del segundo recuadro
+            // Esto con la intencion de siguir pintando si el primer recuadro es mas
+            // grande que el primer recuadro.
+            x = to2.x
+            continue;
+        }
+
+        x++
+    }
+}
+
 // -------
 // Main Class
 // -------
@@ -100,9 +144,10 @@ export default class GridAPI {
 
     static _getSquare(li, x, y) {
         const [xlength] = getLengthGrid(getSquareSize(li))
-        const result = []
+        let result = []
         try {
-            result = GridAPI.main.layers[li][x + y * xlength]
+            result = GridAPI.main.layers[li][x + y * xlength][0]
+            if (!result) result = []
         } catch {}
         return result
     }
@@ -143,7 +188,14 @@ export default class GridAPI {
     }
 
     static getLayerIndex(zoom) {
-        return parseInt(zoom / ZOOM_DIF_LAYERS)
+        let li = parseInt(zoom / ZOOM_DIF_LAYERS)
+
+        if (li > LAYERS_COUNT)
+            li = LAYERS_COUNT
+        else if (li < 0)
+            li = 0
+
+        return li
     }
 
     /**
@@ -154,6 +206,7 @@ export default class GridAPI {
      * @param {Vector2} to
      */
     static getBoundsSquares(zoom, from, to) {
+        zoom -= ZOOM_START
         const li = this.getLayerIndex(zoom)
         const [sfrom, sto] = [
             getNearestSquare(li, from),
@@ -162,7 +215,7 @@ export default class GridAPI {
         const squares = []
 
         for (let x = sfrom.x; x < sto.x; x++)
-            for (let y = sfrom.y; x < sto.y; y++)
+            for (let y = sfrom.y; y < sto.y; y++)
                 squares.push({
                     position: {x, y},
                     elements: this._getSquare(li, x, y)
@@ -196,17 +249,11 @@ export default class GridAPI {
         w.document.write(json)
     }
 
-    static updateGizmos(zoom, from, to) {
+    static update(zoom, from, to) {
         zoom -= ZOOM_START
         const main = this.main
-        if (!main.settings.gizmos) return
 
         let li = this.getLayerIndex(zoom)
-
-        if (li > LAYERS_COUNT)
-            li = LAYERS_COUNT
-        else if (li < 0)
-            li = 0
 
         if (li !== PARAMS.last_layer) {
             PARAMS.last_layer = li
@@ -214,25 +261,65 @@ export default class GridAPI {
         }
 
         const ssize = getSquareSize(li)
-
         const [sfrom, sto] = [getNearestSquare(li, from), getNearestSquare(li, to, true)]
 
-        const needDraw = main.lastLn !== li
+        const changed = main.lastLn !== li
             || main.lastFrom.x !== sfrom.x || main.lastFrom.y !== sfrom.y
             || main.lastTo.x !== sto.x || main.lastTo.y !== sto.y
 
-        if (needDraw) {
-            main.gizmos.clear()
-            main.gizmos.lineStyle(1.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
+        if (changed) {
+            if (main.settings.gizmos) {
+                main.gizmos.clear()
+                main.gizmos.lineStyle(1.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
+            }
 
-            //main.layers[zoom]?.container?.visible = true
+            if (main.lastLn !== li) {
+                for (let x = sfrom.x; x < sto.x; x++)
+                    for (let y = sfrom.y; y < sto.y; y++) {
+                        if (main.settings.gizmos)
+                            main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+                    }
+            }
+            else {
+                if (main.settings.gizmos)
+                    main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
+
+                const diffFrom = new Vector2(sfrom.x - main.lastFrom.x, sfrom.y - main.lastFrom.y)
+                const diffTo = new Vector2(sto.x - main.lastTo.x, sto.y - main.lastTo.y)
+
+                // Pintar el recuadro sin cambios [Only Debug]
+                for (let x = sfrom.x - diffFrom.x; x < sto.x - diffTo.x; x++)
+                    for (let y = sfrom.y - diffFrom.y; y < sto.y - diffTo.y; y++) {
+                        if (main.settings.gizmos)
+                            main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+                    }
+
+                if (main.settings.gizmos)
+                    main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x8F32A6, 1)
+
+                // Pintar recuadro eliminado
+                diffInGrid(main.lastFrom, main.lastTo, sfrom, sto, (x, y) => {
+                    if (main.settings.gizmos)
+                        main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+                })
+
+                if (main.settings.gizmos)
+                    main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x39DE20, 1)
+
+                // Pintar nuevo recuadro
+                const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
+                const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
+
+                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => {
+                    if (main.settings.gizmos)
+                        main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+                })
+            }
+
             main.lastLn = li
             main.lastFrom = sfrom
             main.lastTo = sto
 
-            for (let x = sfrom.x; x < sto.x; x++)
-                for (let y = sfrom.y; y < sto.y; y++)
-                    main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
         }
     }
 }

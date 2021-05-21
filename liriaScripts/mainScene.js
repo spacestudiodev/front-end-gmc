@@ -54,7 +54,7 @@ export default class MainScene extends Container{
 
         const paint = new PaintSprites(this)
         const camera = new Camera(this, app)
-        app.stage.addChild(new DrawSystem())
+        this.addChild(new DrawSystem())
 
         app.ticker.add(() => {
             camera.update()

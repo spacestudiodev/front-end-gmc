@@ -107,7 +107,8 @@ export default class Camera {
 
     update() {
         this.updateCamera()
-        this.showDebug()
+        const {from, to} = this.getFromToCamera()
+        GridAPI.update(this.zPos, from, to)
     }
 
     onMouseMove() {
@@ -150,14 +151,7 @@ export default class Camera {
         return relativePos
     }
 
-    printDebug(text) {
-        this.textDebug += text + "\n"
-    }
-
-    showDebug() {
-        this.text.text = this.textDebug
-        this.textDebug = ""
-
+    getFromToCamera() {
         const camPos = this.cameraPosition
         const worldZoom = this.worldZoom
 
@@ -184,6 +178,6 @@ export default class Camera {
         to.x = to.x * -1 / worldZoom
         to.y = to.y * -1 / worldZoom
 
-        GridAPI.updateGizmos(this.zPos, from, to)
+        return {from, to}
     }
 }
