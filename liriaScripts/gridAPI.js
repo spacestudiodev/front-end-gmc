@@ -82,7 +82,7 @@ function diffInGrid(from1, to1, from2, to2, callback) {
             if (inX & inY) {
                 // Situamos la (y) en el ultimo cuadro (y) del segundo recuadro
                 // Esto con la intencion de siguir pintando si el primer recuadro es mas
-                // grande que el primer recuadro.
+                // grande que el segundo recuadro.
                 y = to2.y
                 continue;
             }
@@ -99,7 +99,7 @@ function diffInGrid(from1, to1, from2, to2, callback) {
         if (!existY && inX) {
             // Situamos la (x) en el ultimo cuadro (x) del segundo recuadro
             // Esto con la intencion de siguir pintando si el primer recuadro es mas
-            // grande que el primer recuadro.
+            // grande que el segundo recuadro.
             x = to2.x
             continue;
         }
@@ -281,10 +281,17 @@ export default class GridAPI {
             }
 
             if (main.lastLn !== li) {
+                for (let x = main.lastFrom.x; x < main.lastTo.x; x++)
+                    for (let y = main.lastFrom.y; y < main.lastTo.y; y++) {
+                        DrawSystem.main.delete(main.lastLn, x, y)
+                    }
+
                 for (let x = sfrom.x; x < sto.x; x++)
                     for (let y = sfrom.y; y < sto.y; y++) {
                         if (PARAMS.gizmos)
                             main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+
+                        DrawSystem.main.add(li, x, y)
                     }
             }
             else {

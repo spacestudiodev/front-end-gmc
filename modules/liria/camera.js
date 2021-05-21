@@ -6,8 +6,8 @@ import GridAPI from "../../liriaScripts/gridAPI"
 import {datUI} from "../../liriaScripts/mainScene"
 
 const PARAMS = {
-    simule_width: 1280,
-    simule_height: 768,
+    simule_width: 800,
+    simule_height: 600,
     position_x: 0.1,
     position_y: 0.1,
     camera_zoom: 0.001,
@@ -152,8 +152,8 @@ export default class Camera {
     }
 
     getFromToCamera() {
-        const camPos = this.cameraPosition
-        const worldZoom = this.worldZoom
+        const camPos = new Vector2(this.cam.position.x, this.cam.position.y)
+        const worldZoom = this.cam.scale.x
 
         const wwidth = window.innerWidth
         const wheight = window.innerHeight
