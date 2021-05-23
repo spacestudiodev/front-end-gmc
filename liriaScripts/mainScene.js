@@ -3,26 +3,31 @@ import {Container} from "@pixi/display"
 
 import dat from 'dat.gui'
 
-import { SVG } from '../modules/pixi-svg'
-import {
-    lima_fencing_highway, 
-    lima_fencing_major_roads, 
-    lima_fencing_perimeter,
-    lima_fencing_roads
-} from '../districtsMaps/lima_fencing'
+import {SVG} from '../modules/pixi-svg'
+import Camera from "../modules/liria/camera"
+import Input from "../modules/liria/input"
+import GridAPI from "./gridAPI"
+import PaintSprites from "./paintSprites"
+import DrawSystem from "./drawSystem"
 
-import {brena_district} from '../districtsMaps/brena'
-import Camera from "../modules/liria/camera";
-import Input from "../modules/liria/input";
-import GridAPI from "./gridAPI";
-import PaintSprites from "./paintSprites";
-import DrawSystem from "./drawSystem";
+import lima_fencing from '../districtsMaps/lima_fencing'
+import mainAvenues from '../districtsMaps/main_avenues'
+import brena from '../districtsMaps/brena'
+import callao from '../districtsMaps/callao'
+import lapunta from '../districtsMaps/lapunta'
+import bellavista from "../districtsMaps/bellavista"
+import ate from "../districtsMaps/ate"
+import jesusmaria from "../districtsMaps/jesusmaria"
+import barranco from "../districtsMaps/barranco"
+import comas from "../districtsMaps/comas"
+import el_agustino from "../districtsMaps/el_agustino"
+import independencia from "../districtsMaps/independencia"
 
 const datUI = new dat.GUI({name: "Debug"})
 
 export {datUI}
 
-export default class MainScene extends Container{
+export default class MainScene extends Container {
     /**
      * Escena inicial
      *
@@ -32,21 +37,26 @@ export default class MainScene extends Container{
         super()
         app.stage.addChild(this)
 
-        const brena = new SVG(brena_district)
-        const perimeter = new SVG(lima_fencing_perimeter)
-        const highway = new SVG(lima_fencing_highway)
-        const majorRoads = new SVG(lima_fencing_major_roads)
-        const roads = new SVG(lima_fencing_roads)
+        const mainMap = new Container()
+        mainMap.position.set(1946, 6394)
+
+        mainMap.addChild(addsvg(mainAvenues))
+        mainMap.addChild(addsvg(lima_fencing))
+        mainMap.addChild(addsvg(brena))
+        mainMap.addChild(addsvg(callao))
+        mainMap.addChild(addsvg(lapunta))
+        mainMap.addChild(addsvg(bellavista))
+        mainMap.addChild(addsvg(ate))
+        mainMap.addChild(addsvg(jesusmaria))
+
+        mainMap.addChild(addsvg(barranco))
+        mainMap.addChild(addsvg(comas))
+        mainMap.addChild(addsvg(el_agustino))
+        mainMap.addChild(addsvg(independencia))
+
+        this.addChild(mainMap)
 
         const input = new Input(app.view)
-
-        brena.position.set(355, 245)
-
-        this.addChild(brena)
-        this.addChild(perimeter)
-        this.addChild(highway)
-        this.addChild(majorRoads)
-        this.addChild(roads)
 
         GridAPI.init(this, {
             gizmos: true
@@ -63,11 +73,23 @@ export default class MainScene extends Container{
 
         this.dispose = () => {
             input.dispose()
-            datUI.destroy() 
+            datUI.destroy()
         }
     }
 
-    static init (app) {
+    static init(app) {
         return new MainScene(app)
     }
 }
+
+function addsvg(data) {
+    const svg = new SVG(data.svg)
+    svg.position.set(data.position[0], data.position[1])
+    return svg
+}
+
+
+
+
+
+

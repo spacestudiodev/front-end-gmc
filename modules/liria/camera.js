@@ -6,11 +6,11 @@ import GridAPI from "../../liriaScripts/gridAPI"
 import {datUI} from "../../liriaScripts/mainScene"
 
 const PARAMS = {
-    simule_width: 800,
-    simule_height: 600,
-    position_x: 0.1,
-    position_y: 0.1,
-    camera_zoom: 0.001,
+    simule_width: 0,
+    simule_height: 0,
+    position_x: -280.01,
+    position_y: -5630.01,
+    camera_zoom: 0.4241,
     zoom: 0.01
 }
 
@@ -43,7 +43,6 @@ export default class Camera {
 
     constructor(container, app) {
         Camera.main = this
-        this.nextZoom = 1
         this.lastScroll = 0
         this.cam = container
         this.view = app.view
@@ -55,6 +54,10 @@ export default class Camera {
         Input.onMouseScroll(this.onMouseScroll.bind(this))
         Input.onMouseMove(this.onMouseMove.bind(this))
 
+        this.cam.scale.x = this.cam.scale.y = this.worldZoom = this.nextZoom = PARAMS.camera_zoom
+        this.cameraPosition = new Vector2(PARAMS.position_x * this.worldZoom, PARAMS.position_y * this.worldZoom)
+        this.cam.position.set(this.cameraPosition.x, this.cameraPosition.y)
+        this.zPos = -10.2
         // --- DEBUG ---
         // --- Dibujo de camara simulada ---
         this.cameraDraw = new PIXI.Graphics()
@@ -95,7 +98,9 @@ export default class Camera {
 
         const lastZoom = this.worldZoom
 
+        console.log(this.zPos)
         this.zPos += deltaY
+        console.log(this.zPos)
         this.zPos = clamp(this.zPos, 0 - 1.5 * 6, 4.75 * 6 - 1.5 * 6)
         this.worldZoom = Math.pow(1.1, this.zPos)
 

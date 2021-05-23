@@ -65,6 +65,26 @@ export default class DrawSystem extends PIXI.Container {
             this.ids[`${li}.${x}.${y}`] = []
         }
     }
+
+    addSingle(li, x, y, elid, xpos, ypos, size) {
+        const dataBuff = this.buffer.use(elid, this)
+        dataBuff.el.position.set(xpos, ypos)
+        dataBuff.el.scale.x = dataBuff.el.scale.y = size
+        dataBuff.el.visible = true
+
+        const path = `${li}.${x}.${y}`
+        if (!this.ids[path]) this.ids[path] = []
+        this.ids[path].push({elid: dataBuff.elid, id: dataBuff.id})
+        return dataBuff.id
+    }
+
+    deleteSingle(li, x, y, elid, id) {
+        const idate = this.ids[`${li}.${x}.${y}`]
+
+        if (idate) {
+            this.buffer.restore(elid, id)
+        }
+    }
 }
 
 class BufferSystem {
@@ -76,9 +96,11 @@ class BufferSystem {
     }
 
     restore(elid, id) {
-        this.inUse[id].visible = false
-        this.queue[elid].push(this.inUse[id])
-        delete this.inUse[id]
+        if (this.inUse[id]) {
+            this.inUse[id].visible = false
+            this.queue[elid].push(this.inUse[id])
+            delete this.inUse[id]
+        }
         this.ids.push(id)
     }
 

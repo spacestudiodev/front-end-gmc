@@ -83,28 +83,23 @@ export default class PaintSprites {
             if (length > 0) {
                 const dataH = this.history[length - 1]
                 GridAPI.removeElement(dataH)
+                DrawSystem.main.deleteSingle(GridAPI.getLayerIndex(Camera.main.zPos), dataH.x, dataH.y, dataH.elid, dataH.buffid)
                 this.history.splice(length - 1, 1)
             }
         }
 
         if (e.key === " ") {
-            const sprite = ElementNode.clone(this.elements[this.curr], true)
-            this.container.addChild(sprite)
             const pos = Camera.main.screenToWorldPos(Input.mousePosition)
-            sprite.anchor.x = 0.5
-            sprite.anchor.y = 0.5
-            sprite.scale.x = this.size
-            sprite.scale.y = this.size
             pos.x = parseFloat(pos.x.toFixed(3))
             pos.y = parseFloat(pos.y.toFixed(3))
-            sprite.position.set(pos.x, pos.y)
 
             const el = GridAPI.addElement({
                 id: this.curr,
                 pos: {x: pos.x, y: pos.y},
                 scale: parseFloat(this.size.toFixed(2)),
-                sprite: sprite,
             }, Camera.main.zPos, pos)
+
+            el.buffid = DrawSystem.main.addSingle(GridAPI.getLayerIndex(Camera.main.zPos), el.x, el.y, this.curr, pos.x, pos.y, this.size)
 
             this.history.push(el)
 
@@ -115,8 +110,8 @@ export default class PaintSprites {
         if (e.key === "e") {
             GridAPI.printLayers()
         }
-        
-        if(e.key === "d") {
+
+        if (e.key === "d") {
             const {from, to} = Camera.main.getFromToCamera()
             DrawSystem.main.draw(GridAPI.getBoundsSquares(Camera.main.zPos, from, to))
         }

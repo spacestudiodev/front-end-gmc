@@ -12,7 +12,7 @@ export default function MainCanvas() {
             height: window.innerHeight,
             antialias: true,
             autoDensity: true,
-            backgroundColor: 0xffffff,
+            backgroundColor: 0xFFD05E,
             resolution: devicePixelRatio
         })
 

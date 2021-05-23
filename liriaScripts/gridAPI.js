@@ -1,19 +1,22 @@
 import * as PIXI from 'pixi.js'
 import Vector2 from "../modules/liria/vector2"
 import {datUI} from './mainScene'
-import brena from '../public/map/json/brena_full'
+import brena from '../public/map/json/backup'
 import DrawSystem from './drawSystem'
 
 // Tamaño de la primera capa
-const MAX_GRID_SIZE = 150
+const MAX_GRID_SIZE = 300
 // Cantidad de capas
 const LAYERS_COUNT = 2
 // Diferencia del zoom entre capas
 const ZOOM_DIF_LAYERS = 8
+const NEW_ZOOM_DIF_LAYERS = [0, 1.4, 3.75]
 // Inicion del Zoom
 const ZOOM_START = -1.5 * 6
 // Area de la Grid
-const AREA_GRID = new Vector2(1200, 700)
+const AREA_GRID = new Vector2(7758, 8408)
+// Posicion de la GRID
+const AREA_POSITION = new Vector2(1946, 6394)
 // Parametros
 const PARAMS = {
     last_layer: 0,
@@ -153,7 +156,7 @@ export default class GridAPI {
         const [xlength] = getLengthGrid(getSquareSize(li))
         let result = []
         try {
-            result = GridAPI.main.layers[li][x + y * xlength][0]
+            result = GridAPI.main.layers[li][x + y * xlength]
             if (!result) result = []
         } catch {}
         return result
@@ -183,18 +186,11 @@ export default class GridAPI {
         if (!layer[ipos]) return
         if (layer[ipos].length <= id) return
 
-        console.log(id, layer[ipos].length)
         layer[ipos].splice(id, 5)
-
-        const sprites = GridAPI.main._sprites
-        const pathSprite = `${li}.${ipos}.${id}`
-        if (sprites[pathSprite]) {
-            sprites[pathSprite].destroy()
-            delete sprites[pathSprite]
-        }
     }
 
     static getLayerIndex(zoom) {
+
         let li = parseInt(zoom / ZOOM_DIF_LAYERS)
 
         if (li > LAYERS_COUNT)
@@ -236,7 +232,7 @@ export default class GridAPI {
         const {x, y} = getNearestSquare(li, pos)
         const [ipos, id] = this._addElementInSquare(li, x, y, el)
 
-        return {li, ipos, id}
+        return {li, ipos, id, x, y, elid: el.id}
     }
 
     static removeElement(data) {
