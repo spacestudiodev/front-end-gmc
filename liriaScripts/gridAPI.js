@@ -3,6 +3,7 @@ import Vector2 from "../modules/liria/vector2"
 import {datUI} from './mainScene'
 import brena from '../public/map/json/backup'
 import DrawSystem from './drawSystem'
+import PaintSprites from './paintSprites'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 300
@@ -14,9 +15,7 @@ const NEW_ZOOM_DIF_LAYERS = [0, 1.4, 3.75]
 // Inicion del Zoom
 const ZOOM_START = -1.5 * 6
 // Area de la Grid
-const AREA_GRID = new Vector2(7758, 8408)
-// Posicion de la GRID
-const AREA_POSITION = new Vector2(1946, 6394)
+const AREA_GRID = new Vector2(7758, 12473)
 // Parametros
 const PARAMS = {
     last_layer: 0,
@@ -190,13 +189,21 @@ export default class GridAPI {
     }
 
     static getLayerIndex(zoom) {
+        if(PaintSprites.canScale) return PARAMS.last_layer
+        zoom -= ZOOM_START
+        zoom /= 6
+        const maxLayers = NEW_ZOOM_DIF_LAYERS.length - 1
 
-        let li = parseInt(zoom / ZOOM_DIF_LAYERS)
+        let li = 0
 
-        if (li > LAYERS_COUNT)
-            li = LAYERS_COUNT
-        else if (li < 0)
-            li = 0
+        let i = maxLayers + 1
+
+        while (i--){
+            if(NEW_ZOOM_DIF_LAYERS[i] < zoom) {
+                li = i
+                break;
+            }
+        }
 
         return li
     }
@@ -209,7 +216,6 @@ export default class GridAPI {
      * @param {Vector2} to
      */
     static getBoundsSquares(zoom, from, to) {
-        zoom -= ZOOM_START
         const li = this.getLayerIndex(zoom)
         const [sfrom, sto] = [
             getNearestSquare(li, from),
@@ -253,10 +259,10 @@ export default class GridAPI {
     }
 
     static update(zoom, from, to) {
-        zoom -= ZOOM_START
         const main = this.main
 
         let li = this.getLayerIndex(zoom)
+        zoom -= ZOOM_START
 
         if (li !== PARAMS.last_layer) {
             PARAMS.last_layer = li

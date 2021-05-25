@@ -9,6 +9,9 @@ import {datUI} from "./mainScene"
 const BUFFER_HISTORY = 20
 
 export default class PaintSprites {
+    static canScale = false
+    static sizeToScale = 0.14
+
     size = 0.2
     position = new Vector2()
     curr = 0
@@ -33,19 +36,21 @@ export default class PaintSprites {
 
         this.debugFolder = datUI.addFolder("Paint")
         this.debugFolder.add(this, "size")
+        this.debugFolder.add(PaintSprites, "canScale").name("Scale Mode")
+        this.debugFolder.add(PaintSprites, "sizeToScale").name("To Scale")
         this.debugFolder.open()
     }
 
     update() {
-        const curr = this.elements[this.curr]
-        const pos = Camera.main.screenToWorldPos(Input.mousePosition)
-        curr.scale.x = this.size
-        curr.scale.y = this.size
-        curr.position.set(pos.x, pos.y)
-    }
-
-    printDebug(string) {
-        this.debugText += string + "\n"
+        if (PaintSprites.canScale) {
+            this.elements[this.curr].visible = false
+        } else {
+            const curr = this.elements[this.curr]
+            const pos = Camera.main.screenToWorldPos(Input.mousePosition)
+            curr.setScale(this.size)
+            curr.position.set(pos.x, pos.y)
+            curr.visible = true
+        }
     }
 
     onKeyDown(e) {
@@ -114,6 +119,12 @@ export default class PaintSprites {
         if (e.key === "d") {
             const {from, to} = Camera.main.getFromToCamera()
             DrawSystem.main.draw(GridAPI.getBoundsSquares(Camera.main.zPos, from, to))
+        }
+
+        if (e.key === "l") {
+            PaintSprites.canScale = !PaintSprites.canScale
+            this.elements[this.curr].visible = !PaintSprites.canScale
+            this.debugFolder.updateDisplay()
         }
     }
 }

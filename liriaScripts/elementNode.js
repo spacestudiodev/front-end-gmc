@@ -1,14 +1,27 @@
 import * as PIXI from "pixi.js"
+import PaintSprites from "./paintSprites"
+import {OutlineFilter} from "pixi-filters"
+import {lerp} from "../modules/liria/mathHelper"
 
 export default class ElementNode extends PIXI.Sprite {
     constructor(texture, interactive = false) {
         super(texture)
+        this.nextScale = undefined
         this.on("pointerdown", this.select.bind(this))
+        this.on("pointerover", this.onpointerover.bind(this))
+        this.on("pointerout", this.onpointerout.bind(this))
         this.interactive = interactive
+        this.foutline = new OutlineFilter(2, 0x99ff99)
     }
 
     updateTransform() {
+        if(!this.nextScale) this.nextScale = this.scale.x
+        this.scale.x = this.scale.y = lerp(this.scale.x, this.nextScale, 0.2)
         super.updateTransform()
+    }
+
+    setScale(scale) {
+        this.scale.x = this.scale.y = this.nextScale = scale
     }
 
     /**
@@ -17,7 +30,17 @@ export default class ElementNode extends PIXI.Sprite {
      * [--]
      */
     select() {
+        if (PaintSprites.canScale) {
+            this.nextScale += PaintSprites.sizeToScale
+        }
+    }
 
+    onpointerover() {
+        this.filters = PaintSprites.canScale ? [this.foutline] : []
+    }
+
+    onpointerout() {
+        this.filters = []
     }
 
     /**

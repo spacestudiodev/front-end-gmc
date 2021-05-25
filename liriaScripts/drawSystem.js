@@ -46,8 +46,9 @@ export default class DrawSystem extends PIXI.Container {
 
             const dataBuff = this.buffer.use(elid, this)
             dataBuff.el.position.set(xpos, ypos)
-            dataBuff.el.scale.x = dataBuff.el.scale.y = scale
+            dataBuff.el.setScale(scale)
             dataBuff.el.visible = true
+            dataBuff.el.interactive = true
 
             const path = `${li}.${x}.${y}`
             if (!this.ids[path]) this.ids[path] = []
@@ -69,8 +70,9 @@ export default class DrawSystem extends PIXI.Container {
     addSingle(li, x, y, elid, xpos, ypos, size) {
         const dataBuff = this.buffer.use(elid, this)
         dataBuff.el.position.set(xpos, ypos)
-        dataBuff.el.scale.x = dataBuff.el.scale.y = size
+        dataBuff.el.setScale(size)
         dataBuff.el.visible = true
+        dataBuff.el.interactive = true
 
         const path = `${li}.${x}.${y}`
         if (!this.ids[path]) this.ids[path] = []
@@ -98,6 +100,7 @@ class BufferSystem {
     restore(elid, id) {
         if (this.inUse[id]) {
             this.inUse[id].visible = false
+            this.inUse[id].interactive = false
             this.queue[elid].push(this.inUse[id])
             delete this.inUse[id]
         }

@@ -9,7 +9,7 @@ import Input from "../modules/liria/input"
 import GridAPI from "./gridAPI"
 import PaintSprites from "./paintSprites"
 import DrawSystem from "./drawSystem"
-
+/*
 import lima_fencing from '../districtsMaps/lima_fencing'
 import mainAvenues from '../districtsMaps/main_avenues'
 import brena from '../districtsMaps/brena'
@@ -22,6 +22,8 @@ import barranco from "../districtsMaps/barranco"
 import comas from "../districtsMaps/comas"
 import el_agustino from "../districtsMaps/el_agustino"
 import independencia from "../districtsMaps/independencia"
+*/
+import all_roads from "../districtsMaps/all_roads";
 
 const datUI = new dat.GUI({name: "Debug"})
 
@@ -38,28 +40,14 @@ export default class MainScene extends Container {
         app.stage.addChild(this)
 
         const mainMap = new Container()
-        mainMap.position.set(1946, 6394)
-
-        mainMap.addChild(addsvg(mainAvenues))
-        mainMap.addChild(addsvg(lima_fencing))
-        mainMap.addChild(addsvg(brena))
-        mainMap.addChild(addsvg(callao))
-        mainMap.addChild(addsvg(lapunta))
-        mainMap.addChild(addsvg(bellavista))
-        mainMap.addChild(addsvg(ate))
-        mainMap.addChild(addsvg(jesusmaria))
-
-        mainMap.addChild(addsvg(barranco))
-        mainMap.addChild(addsvg(comas))
-        mainMap.addChild(addsvg(el_agustino))
-        mainMap.addChild(addsvg(independencia))
+        mainMap.addChild(new SVG(all_roads))
 
         this.addChild(mainMap)
 
         const input = new Input(app.view)
 
         GridAPI.init(this, {
-            gizmos: true
+            gizmos: false
         })
 
         const paint = new PaintSprites(this)

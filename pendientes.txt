@@ -5,12 +5,20 @@
 ✓ Repara la simulacion
 
 -- Sistema de pintado --
-Mostrar Elementos desde un array
+✓ Mostrar Elementos desde un array
 
 
 
 -- PARAMETROS IMPORTANTES --
-TAMAÑO_MINIMO_DE_LA_CASITA = 0.13
-TAMAÑO_MINIMO_DEL_ARBOL = 0.23
+TAMAÑO_MINIMO_DE_LA_CASITA = 0.09
+TAMAÑO_MINIMO_DEL_ARBOL = 0.19
 ZOOM_MINIMO = 1.25
 ZOOM_MAXIMO = 6
+
+
+-- LAYERS PAINT -- PINTAR LA CAPA DE ARRIBA
+Boton para activar
+✓ Clicar para seleccionar el elemento.
+Clicar para deseleccionar el elemento.
+Previsualizar la capa de arriba.
+Cambiar el tamaño de cambio.

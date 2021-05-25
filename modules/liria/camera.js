@@ -46,7 +46,7 @@ export default class Camera {
         this.lastScroll = 0
         this.cam = container
         this.view = app.view
-        this.speed = 0.2
+        this.speed = 0.1
 
         this.text = new PIXI.Text(this.zPos, {fontSize: 14})
         app.stage.addChild(this.text)
@@ -58,6 +58,8 @@ export default class Camera {
         this.cameraPosition = new Vector2(PARAMS.position_x * this.worldZoom, PARAMS.position_y * this.worldZoom)
         this.cam.position.set(this.cameraPosition.x, this.cameraPosition.y)
         this.zPos = -10.2
+        this.zPos = clamp(this.zPos, 0 - 1.5 * 6, 4.75 * 6 - 1.5 * 6)
+
         // --- DEBUG ---
         // --- Dibujo de camara simulada ---
         this.cameraDraw = new PIXI.Graphics()
@@ -98,9 +100,7 @@ export default class Camera {
 
         const lastZoom = this.worldZoom
 
-        console.log(this.zPos)
         this.zPos += deltaY
-        console.log(this.zPos)
         this.zPos = clamp(this.zPos, 0 - 1.5 * 6, 4.75 * 6 - 1.5 * 6)
         this.worldZoom = Math.pow(1.1, this.zPos)
 
