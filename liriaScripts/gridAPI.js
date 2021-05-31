@@ -1,25 +1,23 @@
 import * as PIXI from 'pixi.js'
 import Vector2 from "../modules/liria/vector2"
 import {datUI} from './mainScene'
-import brena from '../public/map/json/backup'
 import DrawSystem from './drawSystem'
 import PaintSprites from './paintSprites'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 300
-// Cantidad de capas
-const LAYERS_COUNT = 2
 // Diferencia del zoom entre capas
-const ZOOM_DIF_LAYERS = 8
-const NEW_ZOOM_DIF_LAYERS = [0, 1.4, 3.75]
+const NEW_ZOOM_DIF_LAYERS = [0, 1.6, 3.75]
 // Inicion del Zoom
 const ZOOM_START = -1.5 * 6
 // Area de la Grid
 const AREA_GRID = new Vector2(7758, 12473)
 // Parametros
 const PARAMS = {
-    last_layer: 0,
-    gizmos: true
+    last_layer: -1,
+    gizmos: true,
+    sx: 0,
+    sy: 0
 }
 
 // -------
@@ -121,7 +119,16 @@ export default class GridAPI {
     constructor(container, settings = {}) {
         GridAPI.main = this
 
-        this.layers = {...brena}
+        this.loading = true
+
+        fetch("/map/json/housepositions.json")
+            .then(response => response.json())
+            .then(json => {
+                this.layers = {...json}
+                this.loading = false
+            })
+
+        this.layers = {}
         this._sprites = {}
 
         this.settings = settings
@@ -145,6 +152,8 @@ export default class GridAPI {
             PARAMS.gizmos = val
             this.gizmos.clear()
         })
+        this.debug.add(PARAMS, "sx").name("Size X")
+        this.debug.add(PARAMS, "sy").name("Size Y")
     }
 
     static init(container, settings = {}) {
@@ -189,7 +198,7 @@ export default class GridAPI {
     }
 
     static getLayerIndex(zoom) {
-        if(PaintSprites.canScale) return PARAMS.last_layer
+        if (PaintSprites.canScale) return PARAMS.last_layer
         zoom -= ZOOM_START
         zoom /= 6
         const maxLayers = NEW_ZOOM_DIF_LAYERS.length - 1
@@ -198,8 +207,8 @@ export default class GridAPI {
 
         let i = maxLayers + 1
 
-        while (i--){
-            if(NEW_ZOOM_DIF_LAYERS[i] < zoom) {
+        while (i--) {
+            if (NEW_ZOOM_DIF_LAYERS[i] < zoom) {
                 li = i
                 break;
             }
@@ -264,12 +273,16 @@ export default class GridAPI {
         let li = this.getLayerIndex(zoom)
         zoom -= ZOOM_START
 
+        const ssize = getSquareSize(li)
+
         if (li !== PARAMS.last_layer) {
             PARAMS.last_layer = li
+            const [xlength, ylength] = getLengthGrid(ssize)
+            PARAMS.sx = xlength
+            PARAMS.sy = ylength
             main.debug.updateDisplay()
         }
 
-        const ssize = getSquareSize(li)
         const [sfrom, sto] = [getNearestSquare(li, from), getNearestSquare(li, to, true)]
 
         const changed = main.lastLn !== li

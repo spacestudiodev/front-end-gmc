@@ -1,5 +1,5 @@
 import {Application} from "@pixi/app";
-import {Container} from "@pixi/display"
+import * as PIXI from "pixi.js"
 
 import dat from 'dat.gui'
 
@@ -9,27 +9,14 @@ import Input from "../modules/liria/input"
 import GridAPI from "./gridAPI"
 import PaintSprites from "./paintSprites"
 import DrawSystem from "./drawSystem"
-/*
-import lima_fencing from '../districtsMaps/lima_fencing'
-import mainAvenues from '../districtsMaps/main_avenues'
-import brena from '../districtsMaps/brena'
-import callao from '../districtsMaps/callao'
-import lapunta from '../districtsMaps/lapunta'
-import bellavista from "../districtsMaps/bellavista"
-import ate from "../districtsMaps/ate"
-import jesusmaria from "../districtsMaps/jesusmaria"
-import barranco from "../districtsMaps/barranco"
-import comas from "../districtsMaps/comas"
-import el_agustino from "../districtsMaps/el_agustino"
-import independencia from "../districtsMaps/independencia"
-*/
-import all_roads from "../districtsMaps/all_roads";
+import all_roads from "../districtsMaps/all_roads"
+import lima from "../districtsMaps/lima"
 
 const datUI = new dat.GUI({name: "Debug"})
 
 export {datUI}
 
-export default class MainScene extends Container {
+export default class MainScene extends PIXI.Container {
     /**
      * Escena inicial
      *
@@ -39,7 +26,31 @@ export default class MainScene extends Container {
         super()
         app.stage.addChild(this)
 
-        const mainMap = new Container()
+        const mainMap = new PIXI.Container()
+        const map = new SVG(lima)
+        const map2 = new SVG(lima)
+        map.position.set(232.075, -587.648)
+        map2.position.set(232.075, -587.648)
+        mainMap.addChild(map)
+        //mainMap.addChild(map2)
+
+        /*
+        const tx = PIXI.Texture.from("map/texture.jpg")
+
+        for (let x = 0; x < 4; x++) {
+            for (let y = 0; y < 7; y++) {
+                const texture = PIXI.Sprite.from(tx)
+                texture.blendMode = PIXI.BLEND_MODES.MULTIPLY
+                texture.alpha = 0.7
+                texture.scale.x = texture.scale.y = 2
+                texture.position.set(232.075 + x * 1024* 2, -587.648 + y * 1024 * 2)
+                texture.mask = map
+
+                mainMap.addChild(texture)
+            }
+        }
+        */
+
         mainMap.addChild(new SVG(all_roads))
 
         this.addChild(mainMap)
