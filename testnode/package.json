@@ -1,0 +1,20 @@
+{
+  "name": "testnode",
+  "version": "1.0.0",
+  "description": "Para pruebas",
+  "main": "index.js",
+  "author": "Yeferson",
+  "license": "MIT",
+  "scripts": {
+    "json": "node index.js",
+    "order": "node reorganize.js"
+  },
+  "dependencies": {
+    "jsdom": "^16.6.0",
+    "node-fetch": "^2.6.1",
+    "normalize-svg-coords": "^1.0.9",
+    "svg-path-bounds": "^1.0.2",
+    "svgpath": "^2.3.1",
+    "xml2json": "^0.12.0"
+  }
+}

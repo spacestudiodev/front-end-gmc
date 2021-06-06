@@ -3,9 +3,10 @@ import Vector2 from "../modules/liria/vector2"
 import {datUI} from './mainScene'
 import DrawSystem from './drawSystem'
 import PaintSprites from './paintSprites'
+import CacheRoads from './cacheRoads'
 
 // Tamaño de la primera capa
-const MAX_GRID_SIZE = 300
+const MAX_GRID_SIZE = 287.532
 // Diferencia del zoom entre capas
 const NEW_ZOOM_DIF_LAYERS = [0, 1.6, 3.75]
 // Inicion del Zoom
@@ -136,10 +137,14 @@ export default class GridAPI {
 
         this.gizmos = new PIXI.Graphics()
         this.gizmos.lineStyle(1, 0x000000, 0.13)
+
         this.lastLn = undefined
+        this.lastLnR = undefined
 
         this.lastFrom = new Vector2(0, 0)
         this.lastTo = new Vector2(0, 0)
+        this.lastFromR = new Vector2(0, 0)
+        this.lastToR = new Vector2(0, 0)
 
         container.addChild(this.gizmos)
 
@@ -283,9 +288,55 @@ export default class GridAPI {
             main.debug.updateDisplay()
         }
 
-        const [sfrom, sto] = [getNearestSquare(li, from), getNearestSquare(li, to, true)]
+        // -------------------
+        // CUADRICULA PARA LAS CALLES
+        // -------------------
+        let [sfrom, sto] = [getNearestSquare(1, from), getNearestSquare(1, to, true)]
 
-        const changed = main.lastLn !== li
+        let changed = main.lastLnR !== li
+            || main.lastFromR.x !== sfrom.x || main.lastFromR.y !== sfrom.y
+            || main.lastToR.x !== sto.x || main.lastToR.y !== sto.y
+
+        if (changed) {
+            if (main.lastLnR !== li) {
+                if (li === 0 && main.lastLnR) {
+                    for (let x = main.lastFromR.x; x < main.lastToR.x; x++)
+                        for (let y = main.lastFromR.y; y < main.lastToR.y; y++) {
+                            CacheRoads.main.delete(1, x, y)
+                        }
+                }
+
+                if (main.lastLnR === 0 && li === 1) {
+                    for (let x = sfrom.x; x < sto.x; x++)
+                        for (let y = sfrom.y; y < sto.y; y++)
+                            CacheRoads.main.add(1, x, y)
+                }
+            }
+            else if (li !== 0) {
+                const diffFrom = new Vector2(sfrom.x - main.lastFromR.x, sfrom.y - main.lastFromR.y)
+                const diffTo = new Vector2(sto.x - main.lastToR.x, sto.y - main.lastToR.y)
+
+                // Pintar recuadro eliminado
+                diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => CacheRoads.main.delete(1, x, y))
+
+                // Pintar nuevo recuadro
+                const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
+                const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
+
+                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(1, x, y))
+            }
+
+            main.lastLnR = li
+            main.lastFromR = sfrom
+            main.lastToR = sto
+        }
+
+        // -------------------
+        // CUADRICULA PARA LAS CASAS
+        // -------------------
+        sfrom = getNearestSquare(li, from), sto = getNearestSquare(li, to, true)
+
+        changed = main.lastLn !== li
             || main.lastFrom.x !== sfrom.x || main.lastFrom.y !== sfrom.y
             || main.lastTo.x !== sto.x || main.lastTo.y !== sto.y
 
@@ -310,21 +361,19 @@ export default class GridAPI {
                     }
             }
             else {
-                if (PARAMS.gizmos)
-                    main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
-
                 const diffFrom = new Vector2(sfrom.x - main.lastFrom.x, sfrom.y - main.lastFrom.y)
                 const diffTo = new Vector2(sto.x - main.lastTo.x, sto.y - main.lastTo.y)
 
                 // Pintar el recuadro sin cambios [Only Debug]
-                for (let x = sfrom.x - diffFrom.x; x < sto.x - diffTo.x; x++)
-                    for (let y = sfrom.y - diffFrom.y; y < sto.y - diffTo.y; y++) {
-                        if (PARAMS.gizmos)
-                            main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
-                    }
+                if (PARAMS.gizmos) {
+                    main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x00ABE7, 1)
 
-                if (PARAMS.gizmos)
+                    for (let x = sfrom.x - diffFrom.x; x < sto.x - diffTo.x; x++)
+                        for (let y = sfrom.y - diffFrom.y; y < sto.y - diffTo.y; y++)
+                            main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
+
                     main.gizmos.lineStyle(2.3 / Math.pow(1.05, zoom), 0x8F32A6, 1)
+                }
 
                 // Pintar recuadro eliminado
                 diffInGrid(main.lastFrom, main.lastTo, sfrom, sto, (x, y) => {
@@ -352,7 +401,6 @@ export default class GridAPI {
             main.lastLn = li
             main.lastFrom = sfrom
             main.lastTo = sto
-
         }
     }
 }

@@ -11,6 +11,8 @@ import PaintSprites from "./paintSprites"
 import DrawSystem from "./drawSystem"
 import all_roads from "../districtsMaps/all_roads"
 import lima from "../districtsMaps/lima"
+import CacheRoads from "./cacheRoads";
+import {Cull} from "@pixi-essentials/cull";
 
 const datUI = new dat.GUI({name: "Debug"})
 
@@ -63,9 +65,22 @@ export default class MainScene extends PIXI.Container {
 
         const paint = new PaintSprites(this)
         const camera = new Camera(this, app)
+
+        const cacheRoads = new CacheRoads()
+        cacheRoads.position.set(1, 2)
+        this.addChild(cacheRoads)
         this.addChild(new DrawSystem())
 
+        /*
+        const cull = new Cull({recursive: true, toggle: 'renderable'})
+        cull.add(app.stage)
+        app.renderer.on("prerender", () => {
+            cull.cull(app.renderer.screen)
+        })
+        */
+
         app.ticker.add(() => {
+            cacheRoads.update()
             camera.update()
             paint.update()
         })

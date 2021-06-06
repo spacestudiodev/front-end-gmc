@@ -9,6 +9,7 @@
     "export": "next build && next export"
   },
   "dependencies": {
+    "@pixi-essentials/cull": "^1.1.0",
     "babel-plugin-styled-components": "^1.12.0",
     "dat.gui": "^0.7.7",
     "framer-motion": "^4.0.2",

@@ -6,8 +6,8 @@ import GridAPI from "../../liriaScripts/gridAPI"
 import {datUI} from "../../liriaScripts/mainScene"
 
 const PARAMS = {
-    simule_width: 0,
-    simule_height: 0,
+    simule_width: window.innerWidth + 320,
+    simule_height: window.innerHeight + 171,
     position_x: -280.01,
     position_y: -5630.01,
     camera_zoom: 0.4241,
@@ -46,10 +46,10 @@ export default class Camera {
         this.lastScroll = 0
         this.cam = container
         this.view = app.view
-        this.speed = 0.1
+        this.speed = 0.4
 
-        this.text = new PIXI.Text(this.zPos, {fontSize: 14})
-        app.stage.addChild(this.text)
+        //this.text = new PIXI.Text(this.zPos, {fontSize: 14})
+        //app.stage.addChild(this.text)
 
         Input.onMouseScroll(this.onMouseScroll.bind(this))
         Input.onMouseMove(this.onMouseMove.bind(this))
@@ -79,9 +79,9 @@ export default class Camera {
         const simulationFolder = cameraFolder.addFolder("Camera Simulation")
         simulationFolder.open()
 
-        simulationFolder.add(PARAMS, "simule_width", 0, window.innerWidth).name("Width")
+        simulationFolder.add(PARAMS, "simule_width", 0, 3000).name("Width")
             .onChange(this.updateSimuleCameraGizmo.bind(this))
-        simulationFolder.add(PARAMS, "simule_height", 0, window.innerHeight).name("Height")
+        simulationFolder.add(PARAMS, "simule_height", 0, 3000).name("Height")
             .onChange(this.updateSimuleCameraGizmo.bind(this))
 
         this.updateSimuleCameraGizmo()
@@ -93,7 +93,7 @@ export default class Camera {
 
     onMouseScroll() {
         const mDeltaY = Input.mouseScrollDelta.y
-        const deltaY = mDeltaY < 0 ? 1.2 : -1.2
+        const deltaY = mDeltaY
 
         const pos = Input.mousePosition
         const relativePos = this.screenToWorldPos(pos)
