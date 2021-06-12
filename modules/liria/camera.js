@@ -46,7 +46,7 @@ export default class Camera {
         this.lastScroll = 0
         this.cam = container
         this.view = app.view
-        this.speed = 0.4
+        this.speed = 1
 
         //this.text = new PIXI.Text(this.zPos, {fontSize: 14})
         //app.stage.addChild(this.text)
@@ -59,6 +59,9 @@ export default class Camera {
         this.cam.position.set(this.cameraPosition.x, this.cameraPosition.y)
         this.zPos = -10.2
         this.zPos = clamp(this.zPos, 0 - 1.5 * 6, 4.75 * 6 - 1.5 * 6)
+
+        this.movDir = new Vector2(0, 0)
+        this.movSpeed = 0
 
         // --- DEBUG ---
         // --- Dibujo de camara simulada ---
@@ -110,8 +113,8 @@ export default class Camera {
         this.cameraPosition.y -= relativePos.y * dif
     }
 
-    update() {
-        this.updateCamera()
+    update(dt) {
+        this.updateCamera(dt)
         const {from, to} = this.getFromToCamera()
         GridAPI.update(this.zPos, from, to)
     }
@@ -119,17 +122,26 @@ export default class Camera {
     onMouseMove() {
         if (!Input.isClicking) return
 
-        this.cameraPosition.x += Input.mouseMovDelta.x
-        this.cameraPosition.y += Input.mouseMovDelta.y
+        this.movDir = Input.mouseMovDelta
+        this.movSpeed = 1
     }
 
-    updateCamera() {
+    updateCamera(dt) {
         const camX = lerp(this.cam.position.x, this.cameraPosition.x, this.speed)
         const camY = lerp(this.cam.position.y, this.cameraPosition.y, this.speed)
         this.cam.position.set(camX, camY)
 
         this.cam.scale.x = lerp(this.cam.scale.x, this.worldZoom, this.speed)
         this.cam.scale.y = lerp(this.cam.scale.y, this.worldZoom, this.speed)
+
+        this.cameraPosition.x += this.movDir.x * this.movSpeed
+        this.cameraPosition.y += this.movDir.y * this.movSpeed
+        
+        this.movSpeed = lerp(this.movSpeed, 0, 0.08)
+
+        if(this.movSpeed < 0) this.movSpeed = 0
+
+        if(Input.isClicking) this.movDir = new Vector2()
 
         // [DEBUG]
         PARAMS.position_x = (camX * -1 / this.cam.scale.x)

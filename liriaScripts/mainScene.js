@@ -1,10 +1,8 @@
-import {Application} from "@pixi/app";
 import * as PIXI from "pixi.js"
 
 import dat from 'dat.gui'
 
 import {SVG} from '../modules/pixi-svg'
-import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import GridAPI from "./gridAPI"
 import PaintSprites from "./paintSprites"
@@ -12,7 +10,15 @@ import DrawSystem from "./drawSystem"
 import all_roads from "../districtsMaps/all_roads"
 import lima from "../districtsMaps/lima"
 import CacheRoads from "./cacheRoads";
-import {Cull} from "@pixi-essentials/cull";
+import DynamicObject from "./DynamicObjects";
+import vp from "./viewport";
+import {Application, Renderer} from "pixi.js";
+import CameraSystem from "./cameraSystem"
+import Stats from 'stats.js'
+
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
 
 const datUI = new dat.GUI({name: "Debug"})
 
@@ -26,14 +32,26 @@ export default class MainScene extends PIXI.Container {
      */
     constructor(app) {
         super()
-        app.stage.addChild(this)
+        this.app = app
+        app.stop()
+
+        const viewport = vp.createRenderer(app.renderer)
+        app.stage.addChild(viewport)
+
+        this.debugContainer = new PIXI.Container()
+        app.stage.addChild(this.debugContainer)
+
+        viewport.addChild(this)
 
         const mainMap = new PIXI.Container()
+
         const map = new SVG(lima)
-        const map2 = new SVG(lima)
+        this.addChild(mainMap)
+
         map.position.set(232.075, -587.648)
-        map2.position.set(232.075, -587.648)
         mainMap.addChild(map)
+
+        //const map2 = map.clone()
         //mainMap.addChild(map2)
 
         /*
@@ -53,57 +71,51 @@ export default class MainScene extends PIXI.Container {
         }
         */
 
-        mainMap.addChild(new SVG(all_roads))
-
-        this.addChild(mainMap)
-
         const input = new Input(app.view)
 
         GridAPI.init(this, {
             gizmos: false
         })
 
-        const paint = new PaintSprites(this)
-        const camera = new Camera(this, app)
+        this.paint = new PaintSprites(app.stage)
+        this.camera = new CameraSystem(this.debugContainer)
 
-        const cacheRoads = new CacheRoads()
-        cacheRoads.position.set(1, 2)
-        this.addChild(cacheRoads)
+        this.cacheRoads = new CacheRoads(app)
+        this.cacheRoads.position.set(1, 2)
+        mainMap.addChild(this.cacheRoads)
+
+        mainMap.addChild(new SVG(all_roads))
+
         this.addChild(new DrawSystem())
-
-        /*
-        const cull = new Cull({recursive: true, toggle: 'renderable'})
-        cull.add(app.stage)
-        app.renderer.on("prerender", () => {
-            cull.cull(app.renderer.screen)
-        })
-        */
-
-        app.ticker.add(() => {
-            cacheRoads.update()
-            camera.update()
-            paint.update()
-        })
+        this.addChild(new DynamicObject())
 
         this.dispose = () => {
             input.dispose()
             datUI.destroy()
         }
+
+        this.update()
     }
 
-    static init(app) {
-        return new MainScene(app)
+    update() {
+        stats.begin()
+        const viewport = vp.get()
+
+        if (viewport.dirty) {
+            this.cacheRoads.update()
+            this.camera.update()
+            this.paint.update()
+            this.app.render()
+
+            viewport.dirty = false
+        }
+
+        stats.end()
+
+        requestAnimationFrame(this.update.bind(this))
+    }
+
+    static init(renderer) {
+        return new MainScene(renderer)
     }
 }
-
-function addsvg(data) {
-    const svg = new SVG(data.svg)
-    svg.position.set(data.position[0], data.position[1])
-    return svg
-}
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 import Camera from "../modules/liria/camera"
 import Input from "../modules/liria/input"
 import Vector2 from "../modules/liria/vector2"
+import CameraSystem from "./cameraSystem"
 import DrawSystem from "./drawSystem"
 import ElementNode, {elementsDefault} from './elementNode'
 import GridAPI from "./gridAPI"
@@ -46,7 +47,7 @@ export default class PaintSprites {
             this.elements[this.curr].visible = false
         } else {
             const curr = this.elements[this.curr]
-            const pos = Camera.main.screenToWorldPos(Input.mousePosition)
+            const pos = CameraSystem.main.screenToWorldPos(Input.mousePosition)
             curr.setScale(this.size)
             curr.position.set(pos.x, pos.y)
             curr.visible = true

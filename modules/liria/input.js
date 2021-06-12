@@ -62,6 +62,7 @@ export default class Input {
         this.fote = this._ontouchend.bind(this)
         this.foms = this._onmousescroll.bind(this)
         this.fomd = this._onmousedown.bind(this)
+        this.fomu = this.__onmouseup.bind(this)
 
         window.addEventListener("keydown", this.fokd)
         window.addEventListener("keyup", this.foku)
@@ -71,6 +72,7 @@ export default class Input {
         this.view.addEventListener("touchmove", this.fotm)
         this.view.addEventListener("touchend", this.fote)
         this.view.addEventListener('mousedown', this.fomd)
+        this.view.addEventListener('mouseup', this.fomu)
 
         Input.mousePosition = new Vector2()
         Input.mouseMovDelta = new Vector2()
@@ -137,7 +139,8 @@ export default class Input {
     _onmousemove(e) {
         Input.mousePosition = new Vector2(e.offsetX, e.offsetY)
         Input.mouseMovDelta = new Vector2(e.movementX, e.movementY)
-        Input.isClicking = e.buttons === 1
+        
+        //Input.isClicking = e.buttons === 1
 
         for (let func of this._eommove)
             func()
@@ -154,8 +157,13 @@ export default class Input {
     }
 
     _onmousedown() {
+        Input.isClicking = true
         for (let func of this._eomclick)
             func()
+    }
+
+    __onmouseup() {
+        Input.isClicking = false
     }
 
     dispose() {
@@ -165,5 +173,9 @@ export default class Input {
         this.view.removeEventListener("mousemove", this.fomm)
         this.view.removeEventListener("wheel", this.foms)
         this.view.removeEventListener("mousedown", this.fomd)
+        this.view.removeEventListener("mousemove", this.fomm)
+        this.view.removeEventListener("touchmove", this.fotm)
+        this.view.removeEventListener("touchend", this.fote)
+        this.view.removeEventListener('mouseup', this.fomu)
     }
 }

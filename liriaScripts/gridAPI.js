@@ -8,9 +8,7 @@ import CacheRoads from './cacheRoads'
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 287.532
 // Diferencia del zoom entre capas
-const NEW_ZOOM_DIF_LAYERS = [0, 1.6, 3.75]
-// Inicion del Zoom
-const ZOOM_START = -1.5 * 6
+const NEW_ZOOM_DIF_LAYERS = [0, 7, 14]
 // Area de la Grid
 const AREA_GRID = new Vector2(7758, 12473)
 // Parametros
@@ -204,8 +202,7 @@ export default class GridAPI {
 
     static getLayerIndex(zoom) {
         if (PaintSprites.canScale) return PARAMS.last_layer
-        zoom -= ZOOM_START
-        zoom /= 6
+        //zoom -= ZOOM_START
         const maxLayers = NEW_ZOOM_DIF_LAYERS.length - 1
 
         let li = 0
@@ -276,7 +273,7 @@ export default class GridAPI {
         const main = this.main
 
         let li = this.getLayerIndex(zoom)
-        zoom -= ZOOM_START
+        //zoom -= ZOOM_START
 
         const ssize = getSquareSize(li)
 
@@ -299,17 +296,24 @@ export default class GridAPI {
 
         if (changed) {
             if (main.lastLnR !== li) {
+                CacheRoads.main.changeLI(li)
+
+                if(!main.lastLnR)
+                    for (let x = sfrom.x; x < sto.x; x++)
+                        for (let y = sfrom.y; y < sto.y; y++)
+                            CacheRoads.main.add(x, y, true)
+                
                 if (li === 0 && main.lastLnR) {
                     for (let x = main.lastFromR.x; x < main.lastToR.x; x++)
                         for (let y = main.lastFromR.y; y < main.lastToR.y; y++) {
-                            CacheRoads.main.delete(1, x, y)
+                            CacheRoads.main.delete(x, y)
                         }
                 }
 
                 if (main.lastLnR === 0 && li === 1) {
                     for (let x = sfrom.x; x < sto.x; x++)
                         for (let y = sfrom.y; y < sto.y; y++)
-                            CacheRoads.main.add(1, x, y)
+                            CacheRoads.main.add(x, y)
                 }
             }
             else if (li !== 0) {
@@ -317,13 +321,20 @@ export default class GridAPI {
                 const diffTo = new Vector2(sto.x - main.lastToR.x, sto.y - main.lastToR.y)
 
                 // Pintar recuadro eliminado
-                diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => CacheRoads.main.delete(1, x, y))
+                diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => CacheRoads.main.delete(x, y))
 
                 // Pintar nuevo recuadro
                 const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
                 const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
 
-                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(1, x, y))
+                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(x, y))
+            } else {
+                const diffFrom = new Vector2(sfrom.x - main.lastFromR.x, sfrom.y - main.lastFromR.y)
+                const diffTo = new Vector2(sto.x - main.lastToR.x, sto.y - main.lastToR.y)
+                const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
+                const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
+
+                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(x, y, true))
             }
 
             main.lastLnR = li

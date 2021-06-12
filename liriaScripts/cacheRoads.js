@@ -10,14 +10,16 @@ const STYLE = "fill:none;stroke:#fbb03b;stroke-linecap:round;stroke-linejoin:rou
 
 export default class CacheRoads extends Container {
     static main
-    constructor() {
+    constructor(app) {
         super()
         CacheRoads.main = this
         this.loading = true
         this.creating = false
-        this.roads = {}
+        this.roads = undefined
         this.cache = {}
         this.pendings = []
+        this.app = app
+        this.li = 0
 
         console.log("Descargando calles...")
         fetch("/map/json/miniroads_v2.json")
@@ -26,41 +28,75 @@ export default class CacheRoads extends Container {
                 this.loading = false
                 this.creating = true
                 this.roads = {...json}
-
+                
+                /*
                 new Promise((resolve) => {
+                    
+                    const prerenderCont = new Container()
+
+                    Object.keys(this.roads).map(v => {
+                        const x = parseInt(v) % WIDTH
+                        const y = parseInt(parseInt(v) / WIDTH)
+
+                        const svg = new SVG(`<svg><path d="${this.roads[v]}" style="${STYLE}"/></svg>`)
+                        svg.position.set(x * 143.766, y * 143.766)
+                        prerenderCont.addChild(svg)
+
+                        this.cache[v] = svg
+                    })
+
+                    this.app.renderer.plugins.prepare.upload(prerenderCont, () => {
+                        Object.keys(this.cache).map(v => {
+                            this.cache[v].visible = false
+                        })
+
+                        this.addChild(prerenderCont)
+                        console.log("calles renderizadas")
+                    })
+
+                    //this.pendings = Object.keys(this.roads).map(v => {
+                    //    const x = parseInt(v) % WIDTH
+                    //    const y = parseInt(parseInt(v) / WIDTH)
+ 
+                    //    this.cache[v] = "disable"
+                    //    return {path: this.roads[v], x, y}
+                    //})
+
                     resolve()
                 }).then(() => {
                     this.creating = false
                     console.log("calles creadas")
                 })
+                */
             })
     }
 
-    get(li, pos) {
-        return this.roads[pos / li]
-    }
-
-    add(li, x, y) {
+    add(x, y, create = false) {
         const pos = x + y * WIDTH
 
         const cache = this.cache[pos]
 
         if (typeof cache === "string") {
-            if (cache === "disable")
+            if (cache === "disable" && !create)
                 this.cache[pos] = "enable"
 
             return
         }
 
         if (!cache) {
-            if (this.roads[pos]) {
-                this.cache[pos] = "enable"
-                this.pendings.push({path: this.roads[pos], x, y})
-            }
+            if (!create && !this.roads[pos]) return
+
+            this.cache[pos] = create ? "disable" : "enable"
+            this.pendings.push({pos, x, y, create})
+
             return
         }
 
-        cache.visible = true
+        cache.visible = !create
+    }
+
+    changeLI(li) {
+        this.li = li
     }
 
     update() {
@@ -72,17 +108,29 @@ export default class CacheRoads extends Container {
 
     addElement() {
         if (this.pendings.length === 0) return
-        const pen = this.pendings.shift()
-        const svg = new SVG(`<svg><path d="${pen.path}" style="${STYLE}"/></svg>`)
+        if (!this.roads) return
+
+        let pen = undefined
+
+        if (this.li === 0)
+            pen = this.pendings.pop()
+        else
+            pen = this.pendings.shift()
+
+        if (!this.roads[pen?.pos]) return
+
+        const svg = new SVG(`<svg><path d="${this.roads[pen.pos]}" style="${STYLE}"/></svg>`)
         svg.position.set(pen.x * 143.766, pen.y * 143.766)
-
-        if (this.cache[pen.x + pen.y * WIDTH] === "disable") svg.visible = false
-
         this.addChild(svg)
-        this.cache[pen.x + pen.y * WIDTH] = svg
+
+        //this.app.render(svg)
+
+        if (this.cache[pen.pos] === "disable") svg.visible = false
+
+        this.cache[pen.pos] = svg
     }
 
-    delete(li, x, y) {
+    delete(x, y) {
         const pos = x + y * WIDTH
         const cache = this.cache[pos]
 
