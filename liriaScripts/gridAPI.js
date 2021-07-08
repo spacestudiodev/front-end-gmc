@@ -4,6 +4,7 @@ import {datUI} from './mainScene'
 import DrawSystem from './drawSystem'
 import PaintSprites from './paintSprites'
 import CacheRoads from './cacheRoads'
+import AvenuesNames from './avenuesNames'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 287.532
@@ -296,13 +297,6 @@ export default class GridAPI {
 
         if (changed) {
             if (main.lastLnR !== li) {
-                CacheRoads.main.changeLI(li)
-
-                if(!main.lastLnR)
-                    for (let x = sfrom.x; x < sto.x; x++)
-                        for (let y = sfrom.y; y < sto.y; y++)
-                            CacheRoads.main.add(x, y, true)
-                
                 if (li === 0 && main.lastLnR) {
                     for (let x = main.lastFromR.x; x < main.lastToR.x; x++)
                         for (let y = main.lastFromR.y; y < main.lastToR.y; y++) {
@@ -312,8 +306,9 @@ export default class GridAPI {
 
                 if (main.lastLnR === 0 && li === 1) {
                     for (let x = sfrom.x; x < sto.x; x++)
-                        for (let y = sfrom.y; y < sto.y; y++)
-                            CacheRoads.main.add(x, y)
+                        for (let y = sfrom.y; y < sto.y; y++){
+                            CacheRoads.main.add(x, y) 
+                        }
                 }
             }
             else if (li !== 0) {
@@ -321,20 +316,17 @@ export default class GridAPI {
                 const diffTo = new Vector2(sto.x - main.lastToR.x, sto.y - main.lastToR.y)
 
                 // Pintar recuadro eliminado
-                diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => CacheRoads.main.delete(x, y))
+                diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => {
+                    CacheRoads.main.delete(x, y)
+                })
 
                 // Pintar nuevo recuadro
                 const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
                 const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
 
-                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(x, y))
-            } else {
-                const diffFrom = new Vector2(sfrom.x - main.lastFromR.x, sfrom.y - main.lastFromR.y)
-                const diffTo = new Vector2(sto.x - main.lastToR.x, sto.y - main.lastToR.y)
-                const newsfrom = new Vector2(sfrom.x - diffFrom.x, sfrom.y - diffFrom.y)
-                const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
-
-                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => CacheRoads.main.add(x, y, true))
+                diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => {
+                    CacheRoads.main.add(x, y)
+                })
             }
 
             main.lastLnR = li

@@ -9,12 +9,17 @@ import PaintSprites from "./paintSprites"
 import DrawSystem from "./drawSystem"
 import all_roads from "../districtsMaps/all_roads"
 import lima from "../districtsMaps/lima"
+import {AdjustmentFilter} from "pixi-filters"
+import limitBrena from '../districtsMaps/limitBrena'
 import CacheRoads from "./cacheRoads";
 import DynamicObject from "./DynamicObjects";
 import vp from "./viewport";
-import {Application, Renderer} from "pixi.js";
+import {Application, ParticleContainer, Renderer} from "pixi.js";
 import CameraSystem from "./cameraSystem"
 import Stats from 'stats.js'
+import TextureManager from "./textureManager"
+import LimitsTexture from "./limitsTexture"
+import AvenuesNames from "./avenuesNames"
 
 const stats = new Stats()
 stats.showPanel(0)
@@ -25,6 +30,8 @@ const datUI = new dat.GUI({name: "Debug"})
 export {datUI}
 
 export default class MainScene extends PIXI.Container {
+    static main
+
     /**
      * Escena inicial
      *
@@ -32,69 +39,101 @@ export default class MainScene extends PIXI.Container {
      */
     constructor(app) {
         super()
-        this.app = app
-        app.stop()
 
+        MainScene.main = this
+        this.app = app
+        app.stop() // Detenemos renderizador automatico
+
+        // Iniciamos el viewport
         const viewport = vp.createRenderer(app.renderer)
         app.stage.addChild(viewport)
+        viewport.addChild(this)
 
+        // Contenedor para los Debugs
         this.debugContainer = new PIXI.Container()
         app.stage.addChild(this.debugContainer)
 
-        viewport.addChild(this)
-
+        // Contenedor principal para el mapa
         const mainMap = new PIXI.Container()
-
-        const map = new SVG(lima)
         this.addChild(mainMap)
 
+        //mainMap.filters = [new AdjustmentFilter({
+            //saturation: 0.9,
+        //})]
+
+        const map = new SVG(lima)
         map.position.set(232.075, -587.648)
         mainMap.addChild(map)
 
-        //const map2 = map.clone()
-        //mainMap.addChild(map2)
-
-        /*
-        const tx = PIXI.Texture.from("map/texture.jpg")
-
-        for (let x = 0; x < 4; x++) {
-            for (let y = 0; y < 7; y++) {
-                const texture = PIXI.Sprite.from(tx)
-                texture.blendMode = PIXI.BLEND_MODES.MULTIPLY
-                texture.alpha = 0.7
-                texture.scale.x = texture.scale.y = 2
-                texture.position.set(232.075 + x * 1024* 2, -587.648 + y * 1024 * 2)
-                texture.mask = map
-
-                mainMap.addChild(texture)
-            }
-        }
-        */
+        const mask = map.clone()
+        mask.position.set(232.075, -587.648)
+        mainMap.addChild(mask)
 
         const input = new Input(app.view)
+        // --------- Componentes ---------
 
-        GridAPI.init(this, {
-            gizmos: false
-        })
+        this.textureManager = new TextureManager(mask).init()
+        
+        this.limitsTextures = new LimitsTexture(mask).init(mainMap)
+        this.limitsTextures.position.set(232.075, -587.648)
+        this.limitsTextures.scale.set(6.95, 6.95)
 
-        this.paint = new PaintSprites(app.stage)
-        this.camera = new CameraSystem(this.debugContainer)
+        const textureMapCont = new PIXI.Container()
+        mainMap.addChild(textureMapCont)
 
-        this.cacheRoads = new CacheRoads(app)
+        this.cacheRoads = new CacheRoads(app).init(mainMap)
         this.cacheRoads.position.set(1, 2)
-        mainMap.addChild(this.cacheRoads)
+
+        new DrawSystem().init()
+
+        GridAPI.init(this, {gizmos: false})
+
+        this.paint = new PaintSprites(this)
+        this.camera = new CameraSystem(this.debugContainer)
 
         mainMap.addChild(new SVG(all_roads))
 
-        this.addChild(new DrawSystem())
-        this.addChild(new DynamicObject())
+        // --------- Elementos en el mapa ---------
 
+        //this.dynamicObject = new DynamicObject()
+        //this.addChild(this.dynamicObject)
+
+        // --------- ---------
+        
         this.dispose = () => {
             input.dispose()
             datUI.destroy()
         }
 
         this.update()
+        datUI.close()
+
+        const loader = PIXI.Loader.shared
+            .add("map/12maps.json")
+            .add("map/allText.json")
+
+        loader
+            .load(() => {
+                const sheet = loader.resources["map/12maps.json"]
+                const json = sheet.data.frames
+                const keys = Object.keys(json)
+                for (let i = 0, len = keys.length; i < len; i++) {
+                    const el = json[keys[i]]
+                    const svg = new SVG(`<svg><path d="${el.path}" fill="white"></path></svg>`)
+                    svg.x = el.pos[0]
+                    svg.y = el.pos[1]
+                    const sprite = new PIXI.Sprite(sheet.textures[keys[i]])
+                    sprite.anchor.set(0.5, 0.5)
+                    sprite.scale.set(2.2, 2.2)
+                    sprite.x = svg.x + svg.width / 2
+                    sprite.y = svg.y + svg.height / 2
+                    sprite.mask = svg
+                    sprite.visible = true
+
+                    textureMapCont.addChild(svg)
+                    textureMapCont.addChild(sprite)
+                }
+            })
     }
 
     update() {
@@ -102,12 +141,16 @@ export default class MainScene extends PIXI.Container {
         const viewport = vp.get()
 
         if (viewport.dirty) {
+            viewport.dirty = false
+
             this.cacheRoads.update()
             this.camera.update()
             this.paint.update()
-            this.app.render()
+            //this.dynamicObject.update()
 
-            viewport.dirty = false
+            this.textureManager.update()
+
+            this.app.render()
         }
 
         stats.end()

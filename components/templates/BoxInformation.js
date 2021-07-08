@@ -11,6 +11,7 @@ import {
 } from "./BoxInformation.style"
 import { useLocation, useHistory } from 'react-router-dom'
 import Button from '../UI/ButtonDiv'
+import {SharedListBox} from "../UI/sharedListBox"
 
 function isUpperCase(aCharacter) {
     return (aCharacter >= 'A') && (aCharacter <= 'Z');
@@ -88,7 +89,7 @@ export function BoxInformation({ pathHover, title, children }) {
                 <BInfoMarginCont>
                     <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
 
-                    <Button className="backButton" src="/images/arrowL.png" onClick={() => history.push("/")}>
+                    <Button className="backButton" src="/images/arrowL.png" onClick={() => history.goBack()}>
                         Atras
                     </Button>
 
@@ -98,6 +99,7 @@ export function BoxInformation({ pathHover, title, children }) {
             <BInfoContentCont>
                 {children}
             </BInfoContentCont>
+            <SharedListBox />
         </BInfoCont>
     )
 }

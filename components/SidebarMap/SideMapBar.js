@@ -10,13 +10,18 @@ import Arrow from '../UI/Arrow'
 import ButtonNav from '../UI/ButtonNav'
 import Button from '../UI/ButtonDiv'
 import Separator from '../UI/Separator'
+import {useEffect, useState} from 'react'
+import {getDistricts} from '../../api/GETs'
 
+export default function SideMapBar({onChangePathHover, districts}) {
 
-const dropdownValues = [
-    "Hello World 1", "Hello World 2", "Hello World 3", "Hello World 4", "Hello World 5", "Hello World 6"
-]
+    const [_districts, setDistricts] = useState(districts)
 
-export default function SideMapBar({ onChangePathHover }) {
+    useEffect(() => {
+        if (!_districts)
+            getDistricts().then(data => setDistricts(data.map(val => val.nombre)))
+    }, [])
+
     return (
         <SMBarCont>
             <SMBarHeader>
@@ -34,7 +39,7 @@ export default function SideMapBar({ onChangePathHover }) {
             <div id="content">
                 <SMBarDDownCont>
                     <Dropdown
-                        data={dropdownValues}
+                        data={_districts}
                         value={undefined}
                         placeholder="Select a District" />
                 </SMBarDDownCont>
@@ -63,7 +68,6 @@ export default function SideMapBar({ onChangePathHover }) {
                 <Button className="playVideo" src="/images/playicon.png">
                     Reproducir video
                 </Button>
-
             </div>
         </SMBarCont >
     )

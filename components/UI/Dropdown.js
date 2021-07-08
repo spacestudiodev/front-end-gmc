@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useTheme } from 'styled-components'
+import {useState} from 'react'
+import {useTheme} from 'styled-components'
 
 import Arrow from './Arrow'
 import {
@@ -10,14 +10,14 @@ import {
     DDownList,
     DDownListItemCont,
 } from './Dropdown.style'
-import { TextPlaceholder, Text } from './Text.style'
+import {TextPlaceholder, Text} from './Text.style'
 
 export default function Dropdown({
     data = [],
     value = undefined,
     placeholder = "Select",
     style,
-    className, ...props }) {
+    className, ...props}) {
 
     const [val, setVal] = useState(value)
 
@@ -40,7 +40,7 @@ export default function Dropdown({
                 setHeightMain(ref.offsetHeight)
         }} style={style} className={className} >
             <DDownListCont isOpen={isOpen} maxHeight={maxHeight}>
-                <div id="ddownscroll" style={{ width: "100%", height: scrollSize, marginTop: heightMain, overflow: 'auto' }}>
+                <div id="ddownscroll" style={{width: "100%", height: scrollSize, marginTop: heightMain, overflow: 'auto'}}>
                     <DDownList extraMargin={extraMargin}>
                         {data.map((v, index) => (
                             <DDownListItemCont isActive={index === val}
@@ -56,9 +56,7 @@ export default function Dropdown({
                         ))}
                     </DDownList>
                 </div>
-
                 <DDownTopShadow height={heightMain + "px"} />
-
             </DDownListCont>
 
             <DDownHeaderCont onClick={() => {

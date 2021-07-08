@@ -1,6 +1,7 @@
+import {forwardRef} from "react"
 import { AButtonCont } from "./AloneButton.style";
 
-export default function AloneButton({
+const AloneButton = forwardRef(({
     width = "40px",
     height = "40px",
     background = "white",
@@ -9,8 +10,9 @@ export default function AloneButton({
     right,
     top,
     bottom,
-    children
-}) {
+    children,
+    ...props
+}, ref) => {
     return (
         <AButtonCont
             className={className}
@@ -20,8 +22,13 @@ export default function AloneButton({
             left={left}
             right={right}
             bottom={bottom}
-            top={top}>
+            top={top}
+            ref={ref}
+            {...props}>
+
             {children}
         </AButtonCont>
     )
-}
+})
+
+export default AloneButton

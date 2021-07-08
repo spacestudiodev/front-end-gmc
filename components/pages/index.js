@@ -27,7 +27,7 @@ export default function HomePages(props) {
 
     return (
         <div id="mainPage">
-            {/* <SideMapBar onChangePathHover={(path, title) => setValues([path, title])} /> */}
+        {/*<SideMapBar onChangePathHover={(path, title) => setValues([path, title])} districts={props.districts}/>*/}
 
             {mainIsLoad && <MapPage />}
 
@@ -39,6 +39,10 @@ export default function HomePages(props) {
                     </DynamicTarget>
 
                     <DynamicTarget target="/actividades-culturales">
+                        <CulturalActivitiesPage data={props.culturalActivities} />
+                    </DynamicTarget>
+
+                    <DynamicTarget target="/actividades-culturales/:type">
                         <CulturalActivitiesPage data={props.culturalActivities} />
                     </DynamicTarget>
 

@@ -1,9 +1,12 @@
-import { motion } from "framer-motion"
-import { urlServerImages } from "../../api/server"
+import {useRef} from 'react'
+import {motion} from "framer-motion"
+import {urlServerImages} from "../../api/server"
 import AloneButton from "../UI/AloneButton"
 import Button from "../UI/ButtonDiv"
-import { SharedIcon } from "../UI/svg/SharedIcon"
-import { BoxICCont } from "./BoxItemsContainer.style"
+import {SharedIcon} from "../UI/svg/SharedIcon"
+import {BoxICCont} from "./BoxItemsContainer.style"
+import {ActiveShareBox} from '../UI/sharedListBox'
+import {useHistory, useLocation} from 'react-router-dom'
 
 const container = {
     open: {
@@ -15,7 +18,7 @@ const container = {
 }
 
 const mitem = {
-    close: { y: 20, opacity: 0 },
+    close: {y: 20, opacity: 0},
     open: {
         y: 0,
         opacity: 1
@@ -23,10 +26,13 @@ const mitem = {
 }
 
 // Test comment
-function BoxItemsContainer({ data, template, className, isOpen, resourceUrl }) {
+function BoxItemsContainer({data, template, className, isOpen, resourceUrl}) {
     const resourcesUrl = `${urlServerImages}/${resourceUrl}`
 
-    const { displayType, itemAccess } = template
+    const {displayType, itemAccess} = template
+    const ref = useRef(new Array())
+    const history = useHistory()
+    const location = useLocation()
     return (
         <BoxICCont
             initial="close"
@@ -42,7 +48,7 @@ function BoxItemsContainer({ data, template, className, isOpen, resourceUrl }) {
                     <motion.div
                         variants={mitem}
                         className="boxItem"
-                        whileHover={{ scale: 1.025, boxShadow: "0px 6px 20px -10px" }}
+                        whileHover={{scale: 1.025, boxShadow: "0px 6px 20px -10px"}}
                         key={index}>
                         <div id="imageCont">
                             <div id="image">
@@ -53,22 +59,30 @@ function BoxItemsContainer({ data, template, className, isOpen, resourceUrl }) {
                         </div>
                         <div id="content">
                             {itemAccess.title &&
-                                <h4 id="title" dangerouslySetInnerHTML={{ __html: item[itemAccess.title] }}></h4>
+                                <h4 id="title" dangerouslySetInnerHTML={{__html: item[itemAccess.title]}}></h4>
                             }
 
                             {description &&
                                 <div id="description"
-                                    dangerouslySetInnerHTML={{ __html: description?.length > 255 ? description?.slice(0, 250) + "..." : description }}></div>
+                                    dangerouslySetInnerHTML={{
+                                        __html:
+                                            description?.length > 255 ? description?.slice(0, 250) + "..." : description
+                                    }}>
+                                </div>
                             }
 
                             {itemAccess.to &&
-                                <Button className="backButton nextButton" src="/images/arrowR.png" onClick={() => { }}>
+                                <Button className="backButton nextButton" src="/images/arrowR.png" onClick={() => {
+                                    history.push(location.pathname +"/" + item[itemAccess.to])
+                                }}>
                                     Continuar
                                 </Button>
                             }
 
                             {itemAccess.canShare &&
-                                <AloneButton right="5px" top="5px" background="#2D1B32" width="45px" height="45px">
+                                <AloneButton className="shareButton" onClick={() => {
+                                    ActiveShareBox("", ref.current[index])
+                                }} ref={r => ref.current[index] = r} right="5px" top="5px" background="#2D1B32" width="45px" height="45px">
                                     <SharedIcon />
                                 </AloneButton>
                             }

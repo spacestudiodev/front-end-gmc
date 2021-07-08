@@ -1,3 +1,4 @@
+import {getViewport} from "../../liriaScripts/viewport"
 import Vector2 from "./vector2"
 
 export default class Input {
@@ -46,6 +47,7 @@ export default class Input {
 
     constructor(view) {
         Input.set(this)
+        this.viewport = getViewport()
 
         this._eokdown = []
         this._eokup = []
@@ -79,6 +81,7 @@ export default class Input {
     }
 
     _onkeydown(e) {
+        this.viewport.dirty = true
         for (let eok of this._eokdown)
             eok(e)
     }
@@ -139,7 +142,8 @@ export default class Input {
     _onmousemove(e) {
         Input.mousePosition = new Vector2(e.offsetX, e.offsetY)
         Input.mouseMovDelta = new Vector2(e.movementX, e.movementY)
-        
+        this.viewport.dirty = true
+
         //Input.isClicking = e.buttons === 1
 
         for (let func of this._eommove)

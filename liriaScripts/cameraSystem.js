@@ -3,6 +3,7 @@ import {getViewport} from "./viewport";
 import * as PIXI from 'pixi.js';
 import Vector2 from "../modules/liria/vector2";
 import GridAPI from "./gridAPI";
+import Input from "../modules/liria/input"
 
 const PARAMS = {
     simule_width: window.innerWidth + 320,
@@ -29,6 +30,7 @@ export default class CameraSystem {
         // --- ---
         // --- Parametros de camara ---
         const cameraFolder = datUI.addFolder("Camera")
+        this.zPos = 0
 
         this.cameraParams = cameraFolder.addFolder("Params")
         this.cameraParams.add(PARAMS, "position_x").name("X")
@@ -48,6 +50,14 @@ export default class CameraSystem {
         this.updateSimuleCameraGizmo()
 
         cameraFolder.open()
+
+        Input.onKeyDown(e => {
+            if(e.key === "z") {
+                this.goToPos()
+            }
+        })
+
+        //setTimeout(this.goToPos.bind(this), 3000)
     }
 
     update() {
@@ -61,7 +71,17 @@ export default class CameraSystem {
         PARAMS.position_y = this.viewport.top
         PARAMS.camera_zoom = this.viewport.scaled
         PARAMS.zoom = parseInt(Math.log(PARAMS.camera_zoom.toFixed(2)) / Math.log(1.16)) + 5
+        this.zPos = PARAMS.zoom
         this.cameraParams.updateDisplay()
+    }
+
+    goToPos() {
+        this.viewport.animate({
+            time: 1000,
+            position: {x: 2357, y: 6230},
+            scale: 4.5,
+            ease: 'easeInOutQuad',
+        })
     }
 
     getFromToCamera() {
@@ -81,7 +101,9 @@ export default class CameraSystem {
         const widthDiff = wwidth / 2 - SIMULE_WIDTH / 2
         const heightDiff = wheight / 2 - SIMULE_HEIGHT / 2
 
-        const from = new Vector2(camPos.x + widthDiff / worldZoom, camPos.y + heightDiff / worldZoom)
+        const from = new Vector2(camPos.x + widthDiff / worldZoom, 
+            camPos.y + heightDiff / worldZoom)
+
         const to = new Vector2(
             this.viewport.right - widthDiff / worldZoom, 
             this.viewport.bottom - heightDiff / worldZoom)
@@ -103,8 +125,8 @@ export default class CameraSystem {
         const cHeight = height / worldZoom
 
         const relativePos = new Vector2(pos.x / width, pos.y / height)
-        relativePos.x = relativePos.x * cWidth + worldPos.x * -1
-        relativePos.y = relativePos.y * cHeight + worldPos.y * -1
+        relativePos.x = relativePos.x * cWidth + worldPos.x
+        relativePos.y = relativePos.y * cHeight + worldPos.y
 
         return relativePos
     }

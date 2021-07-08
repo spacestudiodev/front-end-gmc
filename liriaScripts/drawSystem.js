@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js'
+import LiriaComponent from './classes/liriaComponent'
 import ElementNode, {elementsDefault} from './elementNode'
 import GridAPI from './gridAPI'
 
-export default class DrawSystem extends PIXI.Container {
+export default class DrawSystem extends LiriaComponent {
     /** @typeof {DrawSystem}*/
     static main
 

@@ -89,13 +89,13 @@ export default class PaintSprites {
             if (length > 0) {
                 const dataH = this.history[length - 1]
                 GridAPI.removeElement(dataH)
-                DrawSystem.main.deleteSingle(GridAPI.getLayerIndex(Camera.main.zPos), dataH.x, dataH.y, dataH.elid, dataH.buffid)
+                DrawSystem.main.deleteSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), dataH.x, dataH.y, dataH.elid, dataH.buffid)
                 this.history.splice(length - 1, 1)
             }
         }
 
         if (e.key === " ") {
-            const pos = Camera.main.screenToWorldPos(Input.mousePosition)
+            const pos = CameraSystem.main.screenToWorldPos(Input.mousePosition)
             pos.x = parseFloat(pos.x.toFixed(3))
             pos.y = parseFloat(pos.y.toFixed(3))
 
@@ -103,9 +103,9 @@ export default class PaintSprites {
                 id: this.curr,
                 pos: {x: pos.x, y: pos.y},
                 scale: parseFloat(this.size.toFixed(2)),
-            }, Camera.main.zPos, pos)
+            }, CameraSystem.main.zPos, pos)
 
-            el.buffid = DrawSystem.main.addSingle(GridAPI.getLayerIndex(Camera.main.zPos), el.x, el.y, this.curr, pos.x, pos.y, this.size)
+            el.buffid = DrawSystem.main.addSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), el.x, el.y, this.curr, pos.x, pos.y, this.size)
 
             this.history.push(el)
 
@@ -118,8 +118,8 @@ export default class PaintSprites {
         }
 
         if (e.key === "d") {
-            const {from, to} = Camera.main.getFromToCamera()
-            DrawSystem.main.draw(GridAPI.getBoundsSquares(Camera.main.zPos, from, to))
+            const {from, to} = CameraSystem.main.getFromToCamera()
+            DrawSystem.main.draw(GridAPI.getBoundsSquares(CameraSystem.main.zPos, from, to))
         }
 
         if (e.key === "l") {

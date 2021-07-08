@@ -1,6 +1,10 @@
+import {Texture} from "@pixi/core";
 import {Container} from "@pixi/display";
 import {Graphics} from "@pixi/graphics";
+import {Sprite} from "@pixi/sprite";
+import Input from "../modules/liria/input";
 import {datUI} from "./mainScene";
+import {getViewport} from "./viewport";
 
 function toGeo(coor) {
     const parts = coor.split(",")
@@ -22,7 +26,7 @@ function toXY(coor) {
     const mercN = Math.log(Math.tan((Math.PI / 4) + (latRad / 2)))
     const y = (mh / 2) - (mw * mercN / (2 * Math.PI))
 
-    return { x, y }
+    return {x, y}
 }
 
 Number.prototype.normalizeMinMax = function (min, max) {
@@ -32,7 +36,7 @@ Number.prototype.normalizeMinMax = function (min, max) {
 const GEO_1 = toXY("-11.731576617659666, -77.15196283012733")
 const TARG_1 = {
     x: 1166,
-    y: 1908 
+    y: 1908
 }
 
 const GEO_2 = toXY("-12.50682662742688, -76.72758486791383")
@@ -49,59 +53,91 @@ const COMP = {
 export default class DynamicObject extends Container {
     constructor() {
         super()
+        this.viewport = getViewport()
         // ------------
         // Obteniendo puntos
         // ------------
-    
-        //fetch("")
-        
-        //-------------
-        this.points = [
-            toXY("-12.506961835753327, -76.72757187793852"),
-            toXY("-11.73331257645088, -77.14144476094901"),
-            toXY("-12.054831825237562, -77.04643898081297"),
-            toXY("-12.04280420859264, -77.13804820624934"),
-            toXY("-12.081315088821107, -76.91352310950725"),
-            toXY("-12.136222101532981, -76.75655006086475"),
-            toXY("-12.48624831394058, -76.73685961895109"),
-            toXY("-12.486236227003007, -76.73533469050187"),
-            toXY("-12.054848142763175, -77.04674332559155"),
-            toXY("-12.081035142160841, -76.91082423714806"),
-            toXY("-12.079532497172774, -76.90868857773012"),
+
+        this.points = []
+        this.textures = [
+            "/images/burbujas/calavera.png",
+            "/images/burbujas/fardo.png",
+            "/images/burbujas/jarro.png",
+            "/images/burbujas/molusco.png",
+            "/images/burbujas/mortero.png",
+            "/images/burbujas/piramide1.png",
         ]
-
         this.elements = []
+        this.idDelete = []
 
-        const circle = new Graphics()
-        circle.beginFill(0xff0000, 0.7)
-        circle.drawCircle(0, 0, 3)
-        circle.endFill()
+        fetch("/map/json/points.json")
+            .then(response => response.json())
+            .then(json => {
 
-        circle.beginFill(0xff0000)
-        circle.drawCircle(0, 0, 1)
-        circle.endFill()
+                this.points = json.points.map(val => {
+                    const url = val.url_google.split('@')
+                    const dir = url[1].split(',')
 
-        for (let i = 0; i < this.points.length; i++) {
-            const nCircle = circle.clone()
-            const curr = this.points[i]
+                    const lat = dir[0]
+                    const lon = dir[1]
 
-            const normalizeX = curr.x.normalizeMinMax(Math.min(GEO_1.x, GEO_2.x), Math.max(GEO_1.x, GEO_2.x))
-            const normalizeY = curr.y.normalizeMinMax(Math.min(GEO_1.y, GEO_2.y), Math.max(GEO_1.y, GEO_2.y))
+                    val.position = toXY(`${lat}, ${lon}`)
+                    return val
+                })
 
-            const REL = {
-                x: TARG_2.x - TARG_1.x,
-                y: TARG_2.y - TARG_1.y
+                for (let i = 0; i < this.points.length; i++) {
+                    const point = this.points[i]
+                    const curr = point.position
+                    const texture = Texture.from(this.textures[parseInt(Math.random() * this.textures.length)])
+                    const sprite = new Sprite(texture)
+                    sprite.anchor.x = sprite.anchor.y = 0.5
+                    sprite.scale.x = sprite.scale.y = 0.6
+
+                    const normalizeX = curr.x.normalizeMinMax(Math.min(GEO_1.x, GEO_2.x), Math.max(GEO_1.x, GEO_2.x))
+                    const normalizeY = curr.y.normalizeMinMax(Math.min(GEO_1.y, GEO_2.y), Math.max(GEO_1.y, GEO_2.y))
+
+                    const REL = {
+                        x: TARG_2.x - TARG_1.x,
+                        y: TARG_2.y - TARG_1.y
+                    }
+
+                    const resultX = normalizeX * REL.x + TARG_1.x - COMP.x
+                    const resultY = normalizeY * REL.y + TARG_1.y - COMP.y
+
+                    sprite.position.set(resultX, resultY)
+
+                    sprite.interactive = true
+                    sprite.on("click", () => {
+                        sprite.visible = false
+                        this.viewport.dirty = true
+                        this.idDelete.push(point.id)
+                    })
+
+                    this.addChild(sprite)
+                    this.elements.push(sprite)
+                }
+
+            })
+
+        //-------------
+        
+        Input.onKeyDown(e => {
+            if(e.key === "ñ") {
+                this.points = this.points.map(v => {
+                    let isR = true
+
+                    this.idDelete.forEach(id => {
+                        if(v.id === id) isR = false
+                    })
+
+                    if(isR) return v
+                })
+
+                this.points = this.points.filter(v => v)
+
+                console.log(JSON.stringify(this.points))
             }
-
-            const resultX = normalizeX * REL.x + TARG_1.x - COMP.x
-            const resultY = normalizeY * REL.y + TARG_1.y - COMP.y
-
-            console.log(resultX, resultY)
-
-            nCircle.position.set(resultX, resultY)
-            this.addChild(nCircle)
-            this.elements.push(nCircle)
-        }
+        })
 
         const debug = datUI.addFolder("Dynamic Objects")
 
@@ -134,7 +170,6 @@ export default class DynamicObject extends Container {
     }
 
     updatePositions() {
-
         for (let i = 0; i < this.points.length; i++) {
             const curr = this.points[i]
             const el = this.elements[i]
@@ -152,5 +187,19 @@ export default class DynamicObject extends Container {
 
             el.position.set(resultX, resultY)
         }
+    }
+
+    lastZoom = undefined
+    update() {
+        const worldZoom = this.viewport.scaled
+
+        if (this.lastZoom && this.lastZoom !== worldZoom) {
+            for (let i = 0; i < this.points.length; i++) {
+                const el = this.elements[i]
+                el.scale.x = el.scale.y = 1 / worldZoom * 0.6
+            }
+        }
+
+        this.lastZoom = worldZoom
     }
 }
