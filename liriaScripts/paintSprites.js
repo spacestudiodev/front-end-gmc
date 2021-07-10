@@ -117,15 +117,34 @@ export default class PaintSprites {
             GridAPI.printLayers()
         }
 
-        if (e.key === "d") {
-            const {from, to} = CameraSystem.main.getFromToCamera()
-            DrawSystem.main.draw(GridAPI.getBoundsSquares(CameraSystem.main.zPos, from, to))
-        }
-
         if (e.key === "l") {
             PaintSprites.canScale = !PaintSprites.canScale
             this.elements[this.curr].visible = !PaintSprites.canScale
             this.debugFolder.updateDisplay()
+        }
+
+        if(e.key === "1") {
+            this.elements[this.curr].visible = false
+            this.curr = 0
+            this.elements[this.curr].visible = false
+        }
+
+        if(e.key === "2") {
+            this.elements[this.curr].visible = false
+            this.curr = 1
+            this.elements[this.curr].visible = false
+        }
+
+        if(e.key === "3") {
+            this.elements[this.curr].visible = false
+            this.curr = 4
+            this.elements[this.curr].visible = false
+        }
+
+        if(e.key === "4") {
+            this.elements[this.curr].visible = false
+            this.curr = 5
+            this.elements[this.curr].visible = false
         }
     }
 }

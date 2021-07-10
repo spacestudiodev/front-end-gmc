@@ -300,14 +300,14 @@ export default class GridAPI {
                 if (li === 0 && main.lastLnR) {
                     for (let x = main.lastFromR.x; x < main.lastToR.x; x++)
                         for (let y = main.lastFromR.y; y < main.lastToR.y; y++) {
-                            CacheRoads.main.delete(x, y)
+                            CacheRoads.main?.delete(x, y)
                         }
                 }
 
                 if (main.lastLnR === 0 && li === 1) {
                     for (let x = sfrom.x; x < sto.x; x++)
                         for (let y = sfrom.y; y < sto.y; y++){
-                            CacheRoads.main.add(x, y) 
+                            CacheRoads.main?.add(x, y) 
                         }
                 }
             }
@@ -317,7 +317,7 @@ export default class GridAPI {
 
                 // Pintar recuadro eliminado
                 diffInGrid(main.lastFromR, main.lastToR, sfrom, sto, (x, y) => {
-                    CacheRoads.main.delete(x, y)
+                    CacheRoads.main?.delete(x, y)
                 })
 
                 // Pintar nuevo recuadro
@@ -325,7 +325,7 @@ export default class GridAPI {
                 const newsto = new Vector2(sto.x - diffTo.x, sto.y - diffTo.y)
 
                 diffInGrid(sfrom, sto, newsfrom, newsto, (x, y) => {
-                    CacheRoads.main.add(x, y)
+                    CacheRoads.main?.add(x, y)
                 })
             }
 

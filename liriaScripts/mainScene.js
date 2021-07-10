@@ -143,12 +143,12 @@ export default class MainScene extends PIXI.Container {
         if (viewport.dirty) {
             viewport.dirty = false
 
-            this.cacheRoads.update()
-            this.camera.update()
-            this.paint.update()
-            //this.dynamicObject.update()
+            this.cacheRoads?.update()
+            this.camera?.update()
+            this.paint?.update()
+            this.dynamicObject?.update()
 
-            this.textureManager.update()
+            this.textureManager?.update()
 
             this.app.render()
         }
