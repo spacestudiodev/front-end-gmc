@@ -16,14 +16,20 @@ import DynamicObject from "./DynamicObjects";
 import vp from "./viewport";
 import {Application, ParticleContainer, Renderer} from "pixi.js";
 import CameraSystem from "./cameraSystem"
-import Stats from 'stats.js'
+import Stats, {Panel} from 'stats.js'
 import TextureManager from "./textureManager"
 import LimitsTexture from "./limitsTexture"
 import AvenuesNames from "./avenuesNames"
 
+import * as GStats from "gstats"
+
+const drawCallsPanel = new Panel("Dcalls", "#5F5D5B", "#EFD730")
 const stats = new Stats()
+stats.addPanel(drawCallsPanel)
+
 stats.showPanel(0)
 document.body.appendChild(stats.dom)
+stats.update()
 
 const datUI = new dat.GUI({name: "Debug"})
 
@@ -39,6 +45,13 @@ export default class MainScene extends PIXI.Container {
      */
     constructor(app) {
         super()
+
+        this.stats = undefined
+
+        setTimeout(() => {
+            const pixihooks = new GStats.PIXIHooks(app)
+            this.stats = new GStats.StatsJSAdapter(pixihooks)
+        }, 1000)
 
         MainScene.main = this
         this.app = app
@@ -58,7 +71,7 @@ export default class MainScene extends PIXI.Container {
         this.addChild(mainMap)
 
         //mainMap.filters = [new AdjustmentFilter({
-            //saturation: 0.9,
+        //  saturation: 0.9,
         //})]
 
         const map = new SVG(lima)
@@ -73,7 +86,7 @@ export default class MainScene extends PIXI.Container {
         // --------- Componentes ---------
 
         this.textureManager = new TextureManager(mask).init()
-        
+
         this.limitsTextures = new LimitsTexture(mask).init(mainMap)
         this.limitsTextures.position.set(232.075, -587.648)
         this.limitsTextures.scale.set(6.95, 6.95)
@@ -81,8 +94,8 @@ export default class MainScene extends PIXI.Container {
         const textureMapCont = new PIXI.Container()
         mainMap.addChild(textureMapCont)
 
-        this.cacheRoads = new CacheRoads(app).init(mainMap)
-        this.cacheRoads.position.set(1, 2)
+        //this.cacheRoads = new CacheRoads(app).init(mainMap)
+        //this.cacheRoads.position.set(1, 2)
 
         new DrawSystem().init()
 
@@ -99,7 +112,7 @@ export default class MainScene extends PIXI.Container {
         //this.addChild(this.dynamicObject)
 
         // --------- ---------
-        
+
         this.dispose = () => {
             input.dispose()
             datUI.destroy()
@@ -118,7 +131,7 @@ export default class MainScene extends PIXI.Container {
                 const json = sheet.data.frames
                 const keys = Object.keys(json)
                 for (let i = 0, len = keys.length; i < len; i++) {
-                    if(keys[i] !== "puentepiedra.png") continue
+                    if (keys[i] !== "puentepiedra.png") continue
 
                     const el = json[keys[i]]
                     const svg = new SVG(`<svg><path d="${el.path}" fill="white"></path></svg>`)
@@ -138,6 +151,8 @@ export default class MainScene extends PIXI.Container {
             })
     }
 
+    lastDrawCall = 0
+
     update() {
         stats.begin()
         const viewport = vp.get()
@@ -153,8 +168,16 @@ export default class MainScene extends PIXI.Container {
             this.textureManager?.update()
 
             this.app.render()
-        }
 
+            if (this.stats) {
+                this.stats.update()
+
+                const dc = this.stats.hook.drawCalls - this.lastDrawCall
+                drawCallsPanel.update(dc, 100)
+
+                this.lastDrawCall = this.stats.hook.drawCalls
+            }
+        }
         stats.end()
 
         requestAnimationFrame(this.update.bind(this))

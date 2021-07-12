@@ -6,7 +6,7 @@ export default function MainCanvas() {
     const canvasRef = useRef(null)
 
     useEffect(() => {
-        const renderer = new PIXI.Application({
+        const app = new PIXI.Application({
             view: canvasRef.current,
             width: window.innerWidth,
             height: window.innerHeight,
@@ -16,7 +16,7 @@ export default function MainCanvas() {
             autoDensity: true
         })
 
-        const mainScene = MainScene.init(renderer)
+        const mainScene = MainScene.init(app)
 
         return () => {
             mainScene.dispose()
