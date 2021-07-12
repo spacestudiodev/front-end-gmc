@@ -3,7 +3,7 @@ import LiriaComponent from './classes/liriaComponent'
 import ElementNode, {elementsDefault} from './elementNode'
 import GridAPI from './gridAPI'
 
-export default class DrawSystem extends LiriaComponent {
+export default class DrawSystem extends biriaComponent {
     /** @typeof {DrawSystem}*/
     static main
 
@@ -12,6 +12,7 @@ export default class DrawSystem extends LiriaComponent {
         DrawSystem.main = this
         this.buffer = new BufferSystem()
         this.ids = {}
+        this.cont = new PIXI.SpriteBatch()
     }
 
     /**

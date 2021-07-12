@@ -2,13 +2,13 @@ import {getDistricts} from '../api/GETs'
 import Pages from '../components/pages'
 
 export async function getServerSideProps() {
-    let result = undefined
+    let result = []
 
-    await getDistricts().then(data => result = data)
+    //await getDistricts().then(data => result = data)
 
     return {
         props: {
-            districts: result.map(val => val.nombre)
+            districts: result?.map(val => val.nombre)
         }
     }
 }

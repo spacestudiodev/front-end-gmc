@@ -109,22 +109,24 @@ export default class MainScene extends PIXI.Container {
         datUI.close()
 
         const loader = PIXI.Loader.shared
-            .add("map/12maps.json")
+            .add("map/alllimitations.json")
             .add("map/allText.json")
 
         loader
             .load(() => {
-                const sheet = loader.resources["map/12maps.json"]
+                const sheet = loader.resources["map/alllimitations.json"]
                 const json = sheet.data.frames
                 const keys = Object.keys(json)
                 for (let i = 0, len = keys.length; i < len; i++) {
+                    if(keys[i] !== "puentepiedra.png") continue
+
                     const el = json[keys[i]]
                     const svg = new SVG(`<svg><path d="${el.path}" fill="white"></path></svg>`)
-                    svg.x = el.pos[0]
-                    svg.y = el.pos[1]
+                    svg.x = el.pos[0] + 232.075 + 6.5
+                    svg.y = el.pos[1] - 587.648 + 8
                     const sprite = new PIXI.Sprite(sheet.textures[keys[i]])
                     sprite.anchor.set(0.5, 0.5)
-                    sprite.scale.set(2.2, 2.2)
+                    sprite.scale.set(2, 2)
                     sprite.x = svg.x + svg.width / 2
                     sprite.y = svg.y + svg.height / 2
                     sprite.mask = svg
