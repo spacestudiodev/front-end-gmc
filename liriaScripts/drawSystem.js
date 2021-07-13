@@ -49,7 +49,7 @@ export default class DrawSystem extends LiriaComponent {
             dataBuff.el.position.set(xpos, ypos)
             dataBuff.el.setScale(scale)
             dataBuff.el.visible = true
-            dataBuff.el.interactive = true
+            dataBuff.el.interactive = false
 
             const path = `${li}.${x}.${y}`
             if (!this.ids[path]) this.ids[path] = []
@@ -73,7 +73,7 @@ export default class DrawSystem extends LiriaComponent {
         dataBuff.el.position.set(xpos, ypos)
         dataBuff.el.setScale(size)
         dataBuff.el.visible = true
-        dataBuff.el.interactive = true
+        dataBuff.el.interactive = false
 
         const path = `${li}.${x}.${y}`
         if (!this.ids[path]) this.ids[path] = []

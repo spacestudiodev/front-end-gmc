@@ -15,7 +15,7 @@ export default class ElementNode extends PIXI.Sprite {
     }
 
     updateTransform() {
-        if(!this.nextScale) this.nextScale = this.scale.x
+        if (!this.nextScale) this.nextScale = this.scale.x
         this.scale.x = this.scale.y = lerp(this.scale.x, this.nextScale, 0.2)
         super.updateTransform()
     }

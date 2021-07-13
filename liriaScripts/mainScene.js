@@ -74,6 +74,8 @@ export default class MainScene extends PIXI.Container {
         //  saturation: 0.9,
         //})]
 
+        //app.stage.filters = [new PIXI.filters.FXAAFilter()]
+
         const map = new SVG(lima)
         map.position.set(232.075, -587.648)
         mainMap.addChild(map)
@@ -85,7 +87,7 @@ export default class MainScene extends PIXI.Container {
         const input = new Input(app.view)
         // --------- Componentes ---------
 
-        this.textureManager = new TextureManager(mask).init()
+        this.textureManager = new TextureManager(mask).init(app.stage)
 
         this.limitsTextures = new LimitsTexture(mask).init(mainMap)
         this.limitsTextures.position.set(232.075, -587.648)
@@ -143,7 +145,7 @@ export default class MainScene extends PIXI.Container {
                     sprite.x = svg.x + svg.width / 2
                     sprite.y = svg.y + svg.height / 2
                     sprite.mask = svg
-                    sprite.visible = true
+                    sprite.visible = false
 
                     textureMapCont.addChild(svg)
                     textureMapCont.addChild(sprite)
@@ -177,6 +179,8 @@ export default class MainScene extends PIXI.Container {
 
                 this.lastDrawCall = this.stats.hook.drawCalls
             }
+        } else {
+            this.app
         }
         stats.end()
 

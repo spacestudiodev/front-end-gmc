@@ -10,7 +10,7 @@ export default function MainCanvas() {
             view: canvasRef.current,
             width: window.innerWidth,
             height: window.innerHeight,
-            antialias: true,
+            antialias: false,
             backgroundColor: 0xA8DDF4,
             resolution: devicePixelRatio,
             autoDensity: true

@@ -20,21 +20,14 @@ export default class TextureManager extends LiriaComponent {
         this.textures = []
         this.texturesInUse = {}
 
-        this.particleContainer = new PIXI.ParticleContainer(200, {
-            scale: true,
-            position: true,
-            uvs: true
-        })
-        this.startPosition = new Vector2(232.075, -587.648)
-        this.particleContainer.position.set(this.startPosition.x, this.startPosition.y)
-        this.particleContainer.blendMode = PIXI.BLEND_MODES.MULTIPLY
-        this.particleContainer.alpha = 0.8
-
-        this.addChild(this.particleContainer)
-
         this.mask = mask
 
         this.texture = PIXI.Texture.from("map/texture.jpg")
+        this.tileSprite = new PIXI.TilingSprite(this.texture, window.innerWidth, window.innerHeight)
+        this.tileSprite.blendMode = PIXI.BLEND_MODES.MULTIPLY
+        this.tileSprite.alpha = 0.8
+        this.addChild(this.tileSprite)
+        this.tilePosition = this.tileSprite.tilePosition
 
         Input.onKeyDown(({key}) => {
             if (key === "n") {
@@ -61,8 +54,8 @@ export default class TextureManager extends LiriaComponent {
         cont.scale.y = newScale.y;
     }
 
-    lastFrom = undefined
-    lastTo = undefined
+    lastX = 0
+    lastY = 0
 
     update() {
         const vp = this.viewport
@@ -70,6 +63,18 @@ export default class TextureManager extends LiriaComponent {
         const worldZoom = this.viewport.scaled
         const scale = 1 / worldZoom
 
+        if (!this.lastZoom || this.lastZoom === worldZoom) {
+            const deltaX = vp.left - this.lastX
+            const deltaY = vp.top - this.lastY
+
+            this.tilePosition.x -= deltaX * worldZoom
+            this.tilePosition.y -= deltaY * worldZoom
+        }
+
+        this.lastX = vp.left
+        this.lastY = vp.top
+
+        /*
         if (this.lastZoom && this.lastZoom !== worldZoom) {
             const relativePos = CameraSystem.main.screenToWorldPos(Input.mousePosition)
             this.zoom(scale, relativePos.x, relativePos.y, pc)
@@ -101,14 +106,14 @@ export default class TextureManager extends LiriaComponent {
                         let sprite = this.textures.pop()
 
                         if (!sprite){
-                            sprite = PIXI.Sprite.from(this.texture)
+                            sprite = new PIXI.Sprite(this.texture)
                             pc.addChild(sprite)
                         }
 
                         sprite.scale.set(2, 2)
                         sprite.x = x * 1024 * 2
                         sprite.y = y * 1024 * 2
-                        sprite.visible = true
+                        sprite.alpha = 1
                         this.texturesInUse[x] = {...this.texturesInUse[x], [y]: sprite}
                     } else {
                         let sprite = this.texturesInUse[x]
@@ -117,15 +122,18 @@ export default class TextureManager extends LiriaComponent {
                             sprite = sprite[y]
                         if(!sprite) continue
 
-                        sprite.visible = false
+                        sprite.alpha = 0
                         this.textures.push(sprite)
                         delete this.texturesInUse[x][y]
                     }
                 }
+            console.log(pc.children.length)
 
             this.lastFrom = from
             this.lastTo = to
         }
+        */
+
         this.lastZoom = worldZoom
     }
 }
