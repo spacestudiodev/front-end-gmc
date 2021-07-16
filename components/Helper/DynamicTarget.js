@@ -11,7 +11,7 @@ function getPartsURL(url) {
     })
 }
 
-function getParams (from, to) {
+export function getParams (from, to) {
     const partsFrom = getPartsURL(from)
     const partsTo = to.split("/")
 
@@ -46,13 +46,13 @@ export default function DynamicTarget({pathname, lastPathname, target, children}
     const childs = Children.map(children, child => cloneElement(child, {
         ...child.props,
         isOpen,
-        params: _target.params
+        params: _target?.params
     }))
 
     return (
         <div className="dynamicTarget"
             style={{
-                display: `${lastPathname === _target.url ? "block" : "none"}`
+                display: `${lastPathname === _target?.url ? "block" : "none"}`
             }}>
             {childs}
         </div>

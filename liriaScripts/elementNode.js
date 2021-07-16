@@ -15,13 +15,7 @@ export default class ElementNode extends PIXI.Sprite {
     }
 
     updateTransform() {
-        if (!this.nextScale) this.nextScale = this.scale.x
-        this.scale.x = this.scale.y = lerp(this.scale.x, this.nextScale, 0.2)
         super.updateTransform()
-    }
-
-    setScale(scale) {
-        this.scale.x = this.scale.y = this.nextScale = scale
     }
 
     /**
@@ -60,7 +54,7 @@ export default class ElementNode extends PIXI.Sprite {
      * @param {boolean} interactive
      */
     static from(texturePath, interactive = false) {
-        return new ElementNode(new PIXI.Texture.from(texturePath), interactive)
+        return new ElementNode(new PIXI.Texture.from(texturePath, {mipmap: PIXI.MIPMAP_MODES.OFF}), interactive)
     }
 }
 

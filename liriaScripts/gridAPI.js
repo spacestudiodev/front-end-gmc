@@ -352,7 +352,7 @@ export default class GridAPI {
             if (main.lastLn !== li) {
                 for (let x = main.lastFrom.x; x < main.lastTo.x; x++)
                     for (let y = main.lastFrom.y; y < main.lastTo.y; y++) {
-                        DrawSystem.main.delete(main.lastLn, x, y)
+                        DrawSystem.main?.delete(main.lastLn, x, y)
                     }
 
                 for (let x = sfrom.x; x < sto.x; x++)
@@ -360,7 +360,7 @@ export default class GridAPI {
                         if (PARAMS.gizmos)
                             main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                        DrawSystem.main.add(li, x, y)
+                        DrawSystem.main?.add(li, x, y)
                     }
             }
             else {
@@ -383,7 +383,7 @@ export default class GridAPI {
                     if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                    DrawSystem.main.delete(li, x, y)
+                    DrawSystem.main?.delete(li, x, y)
                 })
 
                 if (PARAMS.gizmos)
@@ -397,7 +397,7 @@ export default class GridAPI {
                     if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                    DrawSystem.main.add(li, x, y)
+                    DrawSystem.main?.add(li, x, y)
                 })
             }
 

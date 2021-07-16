@@ -17,10 +17,7 @@ export default function MainCanvas() {
         })
 
         const mainScene = MainScene.init(app)
-
-        return () => {
-            mainScene.dispose()
-        }
+        return () => { mainScene.dispose() }
     }, [])
 
     return (

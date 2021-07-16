@@ -41,7 +41,6 @@ export function SharedListBox({container}) {
 
 function hasClass(cName, selector) {
     var className = " " + selector + " ";
-    console.log(cName)
     if ((" " + cName + " ").replace(/[\n\t\r]/g, " ").indexOf(className) > -1) {
         return true;
     }

@@ -52,7 +52,7 @@ export default class CameraSystem {
         cameraFolder.open()
 
         Input.onKeyDown(e => {
-            if(e.key === "z") {
+            if (e.key === "z") {
                 this.goToPos()
             }
         })
@@ -63,7 +63,9 @@ export default class CameraSystem {
     update() {
         this.updateParams()
         const {from, to} = this.getFromToCamera()
-        GridAPI.update(PARAMS.zoom, from, to)
+
+        if (GridAPI.main)
+            GridAPI.update(PARAMS.zoom, from, to)
     }
 
     updateParams() {
@@ -72,7 +74,7 @@ export default class CameraSystem {
         PARAMS.camera_zoom = this.viewport.scaled
         PARAMS.zoom = parseInt(Math.log(PARAMS.camera_zoom.toFixed(2)) / Math.log(1.16)) + 5
         this.zPos = PARAMS.zoom
-        this.cameraParams.updateDisplay()
+        //this.cameraParams?.updateDisplay()
     }
 
     goToPos() {
@@ -101,11 +103,11 @@ export default class CameraSystem {
         const widthDiff = wwidth / 2 - SIMULE_WIDTH / 2
         const heightDiff = wheight / 2 - SIMULE_HEIGHT / 2
 
-        const from = new Vector2(camPos.x + widthDiff / worldZoom, 
+        const from = new Vector2(camPos.x + widthDiff / worldZoom,
             camPos.y + heightDiff / worldZoom)
 
         const to = new Vector2(
-            this.viewport.right - widthDiff / worldZoom, 
+            this.viewport.right - widthDiff / worldZoom,
             this.viewport.bottom - heightDiff / worldZoom)
 
         to.x = to.x

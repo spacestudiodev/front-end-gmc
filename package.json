@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@pixi-essentials/cull": "^1.1.0",
+    "@pixi/tilemap": "^3.2.1",
     "babel-plugin-styled-components": "^1.12.0",
     "dat.gui": "^0.7.7",
     "framer-motion": "^4.0.2",
@@ -19,6 +20,7 @@
     "pixi-svg": "^2.3.0",
     "pixi-viewport": "^4.31.0",
     "pixi.js": "^6.0.2",
+    "raw-loader": "^4.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.2",
@@ -29,5 +31,7 @@
     "tweakpane": "^2.2.1",
     "use-tweaks": "^0.3.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
 }

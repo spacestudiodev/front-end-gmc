@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { useLocation } from 'react-router-dom'
+import {useState} from "react"
+import {useLocation} from 'react-router-dom'
 
-import { BoxInformation } from "../templates/BoxInformation"
+import {BoxInformation} from "../templates/BoxInformation"
 
 import DynamicTarget from "../Helper/DynamicTarget"
 import DynamicSwitch from "../Helper/DynamicSwitch"
@@ -16,7 +16,7 @@ import PublicationsPage from "./PublicationsPage"
 export default function HomePages(props) {
     let [mainIsLoad, setMainIsLoad] = useState(false)
 
-    const { pathname } = useLocation()
+    const {pathname} = useLocation()
 
     const [values, setValues] = useState([])
 
@@ -27,9 +27,9 @@ export default function HomePages(props) {
 
     return (
         <div id="mainPage">
-        {/*<SideMapBar onChangePathHover={(path, title) => setValues([path, title])} districts={props.districts}/>*/}
+            <SideMapBar onChangePathHover={(path, title) => setValues([path, title])} districts={props.districts} />
 
-            {mainIsLoad && <MapPage />}
+            {/*mainIsLoad && <MapPage />*/}
 
             <BoxInformation pathHover={values[0]} title={values[1]}>
 
@@ -38,11 +38,11 @@ export default function HomePages(props) {
                         <NewFindingsPage data={props.newFindings} />
                     </DynamicTarget>
 
-                    <DynamicTarget target="/actividades-culturales">
+                    <DynamicTarget target="/actividades-culturales/:type">
                         <CulturalActivitiesPage data={props.culturalActivities} />
                     </DynamicTarget>
 
-                    <DynamicTarget target="/actividades-culturales/:type">
+                    <DynamicTarget target="/actividades-culturales">
                         <CulturalActivitiesPage data={props.culturalActivities} />
                     </DynamicTarget>
 

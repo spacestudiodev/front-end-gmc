@@ -48,7 +48,7 @@ export default class PaintSprites {
         } else {
             const curr = this.elements[this.curr]
             const pos = CameraSystem.main.screenToWorldPos(Input.mousePosition)
-            curr.setScale(this.size)
+            curr.scale.set(this.size, this.size)
             curr.position.set(pos.x, pos.y)
             curr.visible = true
         }
@@ -89,7 +89,7 @@ export default class PaintSprites {
             if (length > 0) {
                 const dataH = this.history[length - 1]
                 GridAPI.removeElement(dataH)
-                DrawSystem.main.deleteSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), dataH.x, dataH.y, dataH.elid, dataH.buffid)
+                DrawSystem.main?.deleteSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), dataH.x, dataH.y, dataH.elid, dataH.buffid)
                 this.history.splice(length - 1, 1)
             }
         }
@@ -105,7 +105,7 @@ export default class PaintSprites {
                 scale: parseFloat(this.size.toFixed(2)),
             }, CameraSystem.main.zPos, pos)
 
-            el.buffid = DrawSystem.main.addSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), el.x, el.y, this.curr, pos.x, pos.y, this.size)
+            el.buffid = DrawSystem.main?.addSingle(GridAPI.getLayerIndex(CameraSystem.main.zPos), el.x, el.y, this.curr, pos.x, pos.y, this.size)
 
             this.history.push(el)
 

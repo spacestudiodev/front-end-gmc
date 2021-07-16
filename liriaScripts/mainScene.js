@@ -21,7 +21,10 @@ import TextureManager from "./textureManager"
 import LimitsTexture from "./limitsTexture"
 import AvenuesNames from "./avenuesNames"
 
+import {CompositeTilemap} from "../modules/tilemap"
+
 import * as GStats from "gstats"
+import {elementsDefault} from "./elementNode"
 
 const drawCallsPanel = new Panel("Dcalls", "#5F5D5B", "#EFD730")
 const stats = new Stats()
@@ -58,9 +61,9 @@ export default class MainScene extends PIXI.Container {
         app.stop() // Detenemos renderizador automatico
 
         // Iniciamos el viewport
-        const viewport = vp.createRenderer(app.renderer)
-        app.stage.addChild(viewport)
-        viewport.addChild(this)
+        this.viewport = vp.createRenderer(app.renderer)
+        app.stage.addChild(this.viewport)
+        this.viewport.addChild(this)
 
         // Contenedor para los Debugs
         this.debugContainer = new PIXI.Container()
@@ -74,8 +77,6 @@ export default class MainScene extends PIXI.Container {
         //  saturation: 0.9,
         //})]
 
-        //app.stage.filters = [new PIXI.filters.FXAAFilter()]
-
         const map = new SVG(lima)
         map.position.set(232.075, -587.648)
         mainMap.addChild(map)
@@ -83,15 +84,16 @@ export default class MainScene extends PIXI.Container {
         const mask = map.clone()
         mask.position.set(232.075, -587.648)
         mainMap.addChild(mask)
+        //const mask = undefined
 
         const input = new Input(app.view)
         // --------- Componentes ---------
 
         this.textureManager = new TextureManager(mask).init(app.stage)
 
-        this.limitsTextures = new LimitsTexture(mask).init(mainMap)
-        this.limitsTextures.position.set(232.075, -587.648)
-        this.limitsTextures.scale.set(6.95, 6.95)
+        //this.limitsTextures = new LimitsTexture(mask).init(mainMap)
+        //this.limitsTextures.position.set(232.075, -587.648)
+        //this.limitsTextures.scale.set(6.95, 6.95)
 
         const textureMapCont = new PIXI.Container()
         mainMap.addChild(textureMapCont)
@@ -99,11 +101,12 @@ export default class MainScene extends PIXI.Container {
         //this.cacheRoads = new CacheRoads(app).init(mainMap)
         //this.cacheRoads.position.set(1, 2)
 
-        new DrawSystem().init()
+        //new DrawSystem().init()
 
-        GridAPI.init(this, {gizmos: false})
+        //GridAPI.init(this, {gizmos: false})
 
-        this.paint = new PaintSprites(this)
+        //this.paint = new PaintSprites(this)
+
         this.camera = new CameraSystem(this.debugContainer)
 
         mainMap.addChild(new SVG(all_roads))
@@ -126,9 +129,38 @@ export default class MainScene extends PIXI.Container {
         const loader = PIXI.Loader.shared
             .add("map/alllimitations.json")
             .add("map/allText.json")
+            .add("map/json/housepositions.json")
 
         loader
             .load(() => {
+                // --- Pintar primer nivel con tilemap
+                const tilemap = new CompositeTilemap()
+                this.addChild(tilemap)
+
+                const rhp = loader.resources["map/json/housepositions.json"]
+
+                if (rhp && rhp.data && rhp.data[0]) {
+                    const hpos = rhp.data[0]
+                    const keys = Object.keys(hpos)
+
+                    for (let i = 0; i < keys.length; i++) {
+                        const elements = hpos[keys[i]]
+                        for (let j = 0; j < elements.length; j = j + 5) {
+                            const elid = elements[j]
+                            const x = elements[j + 1]
+                            const y = elements[j + 2]
+                            const scale = elements[j + 3]
+
+                            tilemap.tile(elementsDefault[elid].texture, x, y, {
+                                scale, 
+                                anchorX: 0.5,
+                                anchorY: 0.5,
+                            })
+                        }
+                    }
+                }
+
+                // --- Pintar limites
                 const sheet = loader.resources["map/alllimitations.json"]
                 const json = sheet.data.frames
                 const keys = Object.keys(json)
@@ -157,10 +189,9 @@ export default class MainScene extends PIXI.Container {
 
     update() {
         stats.begin()
-        const viewport = vp.get()
 
-        if (viewport.dirty) {
-            viewport.dirty = false
+        if (this.viewport.dirty) {
+            this.viewport.dirty = false
 
             this.cacheRoads?.update()
             this.camera?.update()
