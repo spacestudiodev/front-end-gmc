@@ -4,7 +4,7 @@ import Pages from '../components/pages'
 export async function getServerSideProps() {
     let result = []
 
-    await getDistricts().then(data => result = data)
+    //await getDistricts().then(data => result = data)
 
     return {
         props: {

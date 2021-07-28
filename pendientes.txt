@@ -1,18 +1,31 @@
+-- Mapa --
+ --- Completado
+    Zoom limite.
+    Movimiento limite.
+
+ --- Pendientes
+    Pintar casas extras.
+    Pintar todo el mapa por hilos.
+
+
 -- Pagina --
-✓ Crear lista de mapas.
-✓ Abrir/Descargar pdf.
-✓ Compartir PDF
-Subcategorias Actividades culturales.
-Ver informacion de actividades culturales.
-Ver informacion de Nuevos hallazgos.
-Slider de imagenes.
-Menu de cambio entre video y otros elementos.
-Frame de 3D.
-Iconos nuevos.
-Reproductor de video.
-Popup de mapa.
-Botones de compartir.
-✓ Boton lista de compartir.
-Movile responsive:
- - ...
+ --- Completado
+    Crear lista de mapas.
+    Abrir/Descargar pdf.
+    Compartir PDF
+    Subcategorias Actividades culturales.
+    Ver informacion de actividades culturales.
+    Slider de imagenes.
+    Botones de compartir.
+    Boton lista de compartir.
+
+ --- Pendientes ---
+    Ver informacion de Nuevos hallazgos.
+    Menu de cambio entre video y otros elementos.
+    Frame de 3D.
+    Iconos nuevos.
+    Reproductor de video.
+    Popup de mapa.
+    Movile responsive:
+     - ...
 
