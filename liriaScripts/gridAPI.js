@@ -121,13 +121,6 @@ export default class GridAPI {
 
         this.loading = true
 
-        fetch("/map/json/housepositions.json")
-            .then(response => response.json())
-            .then(json => {
-                this.layers = {...json}
-                this.loading = false
-            })
-
         this.layers = {}
         this._sprites = {}
 
@@ -164,6 +157,8 @@ export default class GridAPI {
         return new GridAPI(container, settings)
     }
 
+    // [Obsoleto]
+    /*
     static _getSquare(li, x, y) {
         const [xlength] = getLengthGrid(getSquareSize(li))
         let result = []
@@ -173,7 +168,10 @@ export default class GridAPI {
         } catch {}
         return result
     }
+    */
 
+    // [Obsoleto]
+    /*
     static _addElementInSquare(li, x, y, el) {
         const [xlength] = getLengthGrid(getSquareSize(li))
         const layers = GridAPI.main.layers
@@ -190,7 +188,10 @@ export default class GridAPI {
 
         return [ipos, id]
     }
+    */
 
+    // [Obsoleto] 
+    /*
     static _removeElementInSquare(li, ipos, id) {
         const layer = GridAPI.main.layers[li]
 
@@ -200,6 +201,7 @@ export default class GridAPI {
 
         layer[ipos].splice(id, 5)
     }
+    */
 
     static getLayerIndex(zoom) {
         if (PaintSprites.canScale) return PARAMS.last_layer
@@ -220,6 +222,7 @@ export default class GridAPI {
         return li
     }
 
+    // [Obsoleto]
     /**
      * Deuelve todos los squares que hay entre dos puntos
      *
@@ -227,6 +230,7 @@ export default class GridAPI {
      * @param {Vector2} from
      * @param {Vector2} to
      */
+    /*
     static getBoundsSquares(zoom, from, to) {
         const li = this.getLayerIndex(zoom)
         const [sfrom, sto] = [
@@ -244,7 +248,10 @@ export default class GridAPI {
 
         return squares
     }
+    */
 
+    // [Obsoleto]
+    /*
     static addElement(el, zoom, pos) {
         const li = this.getLayerIndex(zoom)
         const {x, y} = getNearestSquare(li, pos)
@@ -256,7 +263,10 @@ export default class GridAPI {
     static removeElement(data) {
         this._removeElementInSquare(data.li, data.ipos, data.id)
     }
+    */
 
+    // [Obsoleto]
+    /*
     static printLayers() {
         const layers = GridAPI.main.layers
 
@@ -269,12 +279,12 @@ export default class GridAPI {
         const w = window.open("", "", "_blank")
         w.document.write(json)
     }
+    */
 
     static update(zoom, from, to) {
         const main = this.main
 
         let li = this.getLayerIndex(zoom)
-        //zoom -= ZOOM_START
 
         const ssize = getSquareSize(li)
 
@@ -360,7 +370,7 @@ export default class GridAPI {
                         if (PARAMS.gizmos)
                             main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                        DrawSystem.main?.add(li, x, y)
+                        //DrawSystem.main?.add(li, x, y)
                     }
             }
             else {
@@ -383,7 +393,7 @@ export default class GridAPI {
                     if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                    DrawSystem.main?.delete(li, x, y)
+                    //DrawSystem.main?.delete(li, x, y)
                 })
 
                 if (PARAMS.gizmos)
@@ -397,7 +407,7 @@ export default class GridAPI {
                     if (PARAMS.gizmos)
                         main.gizmos.drawRect(x * ssize, y * ssize, ssize, ssize)
 
-                    DrawSystem.main?.add(li, x, y)
+                    //DrawSystem.main?.add(li, x, y)
                 })
             }
 

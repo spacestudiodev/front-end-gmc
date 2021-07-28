@@ -51,10 +51,12 @@ export default class MainScene extends PIXI.Container {
 
         this.stats = undefined
 
+        // DEBUG
         setTimeout(() => {
             const pixihooks = new GStats.PIXIHooks(app)
             this.stats = new GStats.StatsJSAdapter(pixihooks)
         }, 1000)
+        // ---
 
         MainScene.main = this
         this.app = app

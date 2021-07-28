@@ -7,7 +7,7 @@ export interface IZoomLimitsOptions {
 
 const DEFAULT_ZOOMLIMITS_OPTIONS: Required<IZoomLimitsOptions> = {
     minZoom: 0.4,
-    maxZoom: 1,
+    maxZoom: 3,
 };
 
 export default class ZoomLimits extends Plugin {
