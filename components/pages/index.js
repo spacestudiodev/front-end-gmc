@@ -13,6 +13,12 @@ import NewFindingsPage from "./NewFindingsPage"
 import CulturalActivitiesPage from "./CulturalActivitiesPage"
 import PublicationsPage from "./PublicationsPage"
 
+import Modal from 'react-modal'
+
+if (typeof window !== "undefined") {
+    Modal.setAppElement("#__next")
+}
+
 export default function HomePages(props) {
     let [mainIsLoad, setMainIsLoad] = useState(false)
 
@@ -27,30 +33,29 @@ export default function HomePages(props) {
 
     return (
         <div id="mainPage">
-            <SideMapBar onChangePathHover={(path, title) => setValues([path, title])} districts={props.districts} />
 
-            {/*mainIsLoad && <MapPage />*/}
+            {/*
+            <SideMapBar onChangePathHover={(path, title) => setValues([path, title])}
+                districts={props.districts}
+            />
+            */}
+
+            {mainIsLoad && <MapPage />}
 
             <BoxInformation pathHover={values[0]} title={values[1]}>
-
                 <DynamicSwitch>
-                    <DynamicTarget target="/nuevos-hallazgos">
+                    <DynamicTarget exact path="/nuevos-hallazgos">
                         <NewFindingsPage data={props.newFindings} />
                     </DynamicTarget>
 
-                    <DynamicTarget target="/actividades-culturales/:type">
+                    <DynamicTarget path="/actividades-culturales">
                         <CulturalActivitiesPage data={props.culturalActivities} />
                     </DynamicTarget>
 
-                    <DynamicTarget target="/actividades-culturales">
-                        <CulturalActivitiesPage data={props.culturalActivities} />
-                    </DynamicTarget>
-
-                    <DynamicTarget target="/publicaciones">
+                    <DynamicTarget exact path="/publicaciones">
                         <PublicationsPage data={props.publications} />
                     </DynamicTarget>
                 </DynamicSwitch>
-
             </BoxInformation>
         </div>
     )

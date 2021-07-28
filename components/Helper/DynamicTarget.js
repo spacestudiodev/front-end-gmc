@@ -1,59 +1,44 @@
-import {Children, cloneElement, useEffect, useState} from "react"
+import {matchPath} from 'react-router-dom'
+import {Children, cloneElement, useEffect, useRef, useState} from "react"
+import {setActiveHeight} from '../templates/BoxInformation'
 
-function getPartsURL(url) {
-    return url.split("/").map(v => {
-        const isParam = v[0] === ":"
-        if(isParam) v.splice(0, 1)
-        return {
-            type: isParam ? "param" : "static",
-            url: v
-        }
-    })
-}
-
-export function getParams (from, to) {
-    const partsFrom = getPartsURL(from)
-    const partsTo = to.split("/")
-
-    if(partsFrom.length !== partsTo.length) 
-        return undefined
-
-    const result = {
-        url: to,
-        params: {}
-    }
-
-    let isEqual = true
-
-    partsFrom.forEach((val, index) => {
-        if(val.type === "static")
-            if(val.url !== partsTo[index]) isEqual = false
-        else
-            result.params[val.url] = partsTo[index]
-    })
-
-    return isEqual ? result : undefined
-}
-
-export default function DynamicTarget({pathname, lastPathname, target, children}) {
-    const isOpen = pathname === target
-    const [_target, setParams] = useState(undefined)
+export default function DynamicTarget({persistent, match, pathname, lastPathname, path, children, ...props}) {
+    let [_match, setMatch] = useState(match)
+    const isActive = _match?.url === pathname
 
     useEffect(() => {
-        setParams(getParams(target, pathname))
+        if (match) {
+            setMatch(_match = match)
+        }
+        else {
+            const newMatch = matchPath(lastPathname, {
+                path,
+                exact: props.exact,
+                strict: props.strict,
+            })
+            setMatch(_match = newMatch)
+        }
     }, [pathname])
 
-    const childs = Children.map(children, child => cloneElement(child, {
-        ...child.props,
-        isOpen,
-        params: _target?.params
-    }))
+    const childs = Children.map(children, child => {
+        if (typeof child.type === "string") return child
+
+        return cloneElement(child, {
+            ...child.props,
+            isOpen: isActive,
+            match: _match,
+            params: _match?.params,
+            path,
+        })
+    })
 
     return (
-        <div className="dynamicTarget"
-            style={{
-                display: `${lastPathname === _target?.url ? "block" : "none"}`
-            }}>
+        <div style={{
+            display: `${_match !== null || persistent ? "block" : "none"}`,
+            position: "absolute",
+            width: "100%",
+            pointerEvents: isActive ? "initial" : "none",
+        }}>
             {childs}
         </div>
     )

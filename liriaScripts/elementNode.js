@@ -79,4 +79,8 @@ export const elementsDefault = [
     ElementNode.from("../map/mountainBrown.png"),
     ElementNode.from("../map/mountainGrey.png"),
     ElementNode.from("../map/mountainGreen.png"),
+    ElementNode.from("../map/aeropuerto.png"),
+    ElementNode.from("../map/real-felipe.png"),
+    ElementNode.from("../map/plaza-armas-lima.png"),
+    ElementNode.from("../map/estadio-nacional.png"),
 ]

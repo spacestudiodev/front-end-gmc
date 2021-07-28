@@ -1,4 +1,6 @@
 import {Viewport} from 'pixi-viewport'
+import ZoomLimits from './viewportplugins/zoomLimits'
+import MoveLimits from './viewportplugins/moveLimits'
 
 let viewport
 export function createViewportRenderer(renderer) {
@@ -22,6 +24,13 @@ export function createViewportRenderer(renderer) {
             smooth: 4
         })
 
+    viewport.plugins.add("zoomLimits", new ZoomLimits(viewport))
+    viewport.plugins.add("moveLimits", new MoveLimits(viewport, {
+        left: 165,
+        top: 2756,
+        right: 5391,
+        bottom: 8996
+    }))
     return viewport
 }
 

@@ -8,5 +8,6 @@ const GET = (url) => new Promise((resolve, reject) => fetch(`${urlServerApi}/${u
 
 export const getListNewFindings = () => GET(`api/NuevoHallazgo/get`)
 export const getListCulturalActivities = () => GET(`api/Actividades/listado_tipo`)
+export const getListSubCulturalActivities = (slug) => GET(`api/Actividades/listado?slug=${slug}`)
 export const getListPublications = () => GET(`api/Publicaciones/listado`)
 export const getDistricts = () => GET("api/Distrito/listado")

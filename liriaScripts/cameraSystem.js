@@ -74,7 +74,7 @@ export default class CameraSystem {
         PARAMS.camera_zoom = this.viewport.scaled
         PARAMS.zoom = parseInt(Math.log(PARAMS.camera_zoom.toFixed(2)) / Math.log(1.16)) + 5
         this.zPos = PARAMS.zoom
-        //this.cameraParams?.updateDisplay()
+        this.cameraParams?.updateDisplay()
     }
 
     goToPos() {

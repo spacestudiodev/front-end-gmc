@@ -71,7 +71,7 @@ export default class DrawSystem extends LiriaComponent {
     addSingle(li, x, y, elid, xpos, ypos, size) {
         const dataBuff = this.buffer.use(elid, this)
         dataBuff.el.position.set(xpos, ypos)
-        dataBuff.el.scale.x = dataBuff.el.scale.y = scale
+        dataBuff.el.scale.x = dataBuff.el.scale.y = size
         dataBuff.el.visible = true
         dataBuff.el.interactive = false
 

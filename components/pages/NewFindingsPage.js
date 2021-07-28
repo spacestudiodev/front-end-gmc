@@ -8,7 +8,7 @@ export default function NewFindingsPage({ data, isOpen }) {
     useEffect(() => {
         if (!_data)
             getListNewFindings().then(data => setData(data))
-    }, [])
+    })
 
     return (
         <BoxItemsContainer

@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useRef, useEffect, useContext} from 'react'
 import {motion} from 'framer-motion'
 import {urlServerImages, urlServerPDF} from '../../api/server'
 import AloneButton from '../UI/AloneButton'
@@ -6,6 +6,7 @@ import {ActiveShareBox} from '../UI/sharedListBox'
 import {DownloadIcon} from '../UI/svg/DownloadIcon'
 import {SharedIcon} from '../UI/svg/SharedIcon'
 import {PDFIButonsCont, PDFICont, PDFIInfoCont, PDFIItem, PDFIItemsCont} from './PDFItems.style'
+import {DynamicHeight} from './BoxInformation'
 
 const container = {
     open: {
@@ -41,9 +42,26 @@ export default function PDFItems({data, template, isOpen, imagesUrl, downloadUrl
     const animOpen = isOpen && data ? "open" : "close"
 
     const ref = useRef(new Array())
+    const contentRef = useRef()
+
+    const changeHeight = useContext(DynamicHeight)
+
+    const sendHeight = () => {
+        if (data && isOpen && contentRef.current) {
+            changeHeight(contentRef.current.clientHeight)
+        }
+    }
+
+    useEffect(() => {
+        sendHeight()
+    }, [data, isOpen, contentRef])
+
+    useEffect(() => {
+        sendHeight()
+    }, [])
 
     return (
-        <PDFICont variants={container} initial="close" animate={animOpen}>
+        <PDFICont ref={contentRef} variants={container} initial="close" animate={animOpen}>
             {data?.map((item, index) => {
                 return (
                     <PDFIItemsCont key={index} variants={animItem} whileHover={{scale: 1.04}}>

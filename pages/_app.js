@@ -4,6 +4,8 @@ import theme from '../style/theme/default.style'
 import App from './index'
 
 import '../style/main.css'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import '../style/slider.css'
 import WithRouterSSR from '../components/Helper/WithRouterSSR'
 
 let StartComponent = undefined

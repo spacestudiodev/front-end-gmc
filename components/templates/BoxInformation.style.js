@@ -94,10 +94,13 @@ export const BInfoContentCont = styled.div`
     width: 1080px;
 
     .dynamicTarget {
+        overflow: hidden;
+        position: relative;
         background-color: ${({ theme }) => theme.color.sec};
         border-radius: 24px;
         margin-bottom: 20px;
-        min-height: 720px;
+        min-height: 550px;
+        transition: height 300ms;
     }
 `
 

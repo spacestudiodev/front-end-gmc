@@ -89,21 +89,21 @@ export default class MainScene extends PIXI.Container {
         const input = new Input(app.view)
         // --------- Componentes ---------
 
-        this.textureManager = new TextureManager(mask).init(app.stage)
+        this.textureManager = new TextureManager().init(app.stage)
 
-        //this.limitsTextures = new LimitsTexture(mask).init(mainMap)
-        //this.limitsTextures.position.set(232.075, -587.648)
-        //this.limitsTextures.scale.set(6.95, 6.95)
+        this.limitsTextures = new LimitsTexture(mask).init(mainMap)
+        this.limitsTextures.position.set(232.075, -587.648)
+        this.limitsTextures.scale.set(6.95, 6.95)
 
         const textureMapCont = new PIXI.Container()
         mainMap.addChild(textureMapCont)
 
-        //this.cacheRoads = new CacheRoads(app).init(mainMap)
-        //this.cacheRoads.position.set(1, 2)
+        this.cacheRoads = new CacheRoads(app).init(mainMap)
+        this.cacheRoads.position.set(1, 2)
 
         //new DrawSystem().init()
 
-        //GridAPI.init(this, {gizmos: false})
+        GridAPI.init(this, {gizmos: false})
 
         //this.paint = new PaintSprites(this)
 
@@ -134,10 +134,13 @@ export default class MainScene extends PIXI.Container {
         loader
             .load(() => {
                 // --- Pintar primer nivel con tilemap
+
                 const tilemap = new CompositeTilemap()
                 this.addChild(tilemap)
 
                 const rhp = loader.resources["map/json/housepositions.json"]
+
+                let iteracion = 0
 
                 if (rhp && rhp.data && rhp.data[0]) {
                     const hpos = rhp.data[0]
@@ -156,6 +159,8 @@ export default class MainScene extends PIXI.Container {
                                 anchorX: 0.5,
                                 anchorY: 0.5,
                             })
+
+                            iteracion++
                         }
                     }
                 }

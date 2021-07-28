@@ -258,7 +258,6 @@ export class Tilemap extends Container {
 
         const pb = this.pointsBuf;
 
-        console.log(u, v)
         this.hasAnimatedTile = this.hasAnimatedTile || animX > 0 || animY > 0;
 
         tileWidth *= scale;

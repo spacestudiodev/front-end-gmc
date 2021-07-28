@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import {useEffect, useState, useRef, createContext} from 'react'
 
 import {
     BInfoCont,
@@ -9,7 +9,7 @@ import {
     BInfoMenuButton,
     BInfoMarginCont
 } from "./BoxInformation.style"
-import { useLocation, useHistory } from 'react-router-dom'
+import {useLocation, useHistory} from 'react-router-dom'
 import Button from '../UI/ButtonDiv'
 import {SharedListBox} from "../UI/sharedListBox"
 
@@ -17,9 +17,12 @@ function isUpperCase(aCharacter) {
     return (aCharacter >= 'A') && (aCharacter <= 'Z');
 }
 
-export function BoxInformation({ pathHover, title, children }) {
+export const DynamicHeight = createContext()
 
-    const { pathname } = useLocation()
+export function BoxInformation({pathHover, title, children}) {
+    const [activeHeight, setActiveHeight] = useState(0)
+
+    const {pathname} = useLocation()
     const history = useHistory()
 
     const [lastText, setLastText] = useState("")
@@ -78,28 +81,35 @@ export function BoxInformation({ pathHover, title, children }) {
         }
     }, [mainRef])
 
-    //------------
-    //------------
+    const valueContext = height => {
+        setActiveHeight(height)
+    }
 
+    //------------
+    //------------
     return (
-        <BInfoCont ref={mainRef} isActive={isActive} isHover={isHover}>
-            <BInfoHeader>
-                <BInfoTopBorder />
+        <DynamicHeight.Provider value={valueContext}>
+            <BInfoCont ref={mainRef} isActive={isActive} isHover={isHover}>
+                <BInfoHeader>
+                    <BInfoTopBorder />
 
-                <BInfoMarginCont>
-                    <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
+                    <BInfoMarginCont>
+                        <BInfoHeaderText bold>{lastText}<span>(Presionar para desplegar)</span></BInfoHeaderText>
 
-                    <Button className="backButton" src="/images/arrowL.png" onClick={() => history.goBack()}>
-                        Atras
-                    </Button>
+                        <Button className="backButton" src="/images/arrowL.png" onClick={() => history.goBack()}>
+                            Atras
+                        </Button>
 
-                </BInfoMarginCont>
+                    </BInfoMarginCont>
 
-            </BInfoHeader>
-            <BInfoContentCont>
-                {children}
-            </BInfoContentCont>
-            <SharedListBox />
-        </BInfoCont>
+                </BInfoHeader>
+                <BInfoContentCont>
+                    <div className="dynamicTarget" style={{height: activeHeight + "px"}}>
+                        {children}
+                    </div >
+                </BInfoContentCont>
+                <SharedListBox />
+            </BInfoCont>
+        </DynamicHeight.Provider>
     )
 }
