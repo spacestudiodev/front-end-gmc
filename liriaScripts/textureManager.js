@@ -1,13 +1,6 @@
 import * as PIXI from 'pixi.js'
-import Input from '../modules/liria/input'
-import Vector2 from '../modules/liria/vector2'
-import CameraSystem from './cameraSystem'
 import LiriaComponent from './classes/liriaComponent'
 import {getViewport} from './viewport'
-
-function isEqualFloat(value, compare) {
-    return value.toFixed(4) === compare.toFixed(4)
-}
 
 export default class TextureManager extends LiriaComponent {
 

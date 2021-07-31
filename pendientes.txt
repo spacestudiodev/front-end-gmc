@@ -4,11 +4,11 @@
     Movimiento limite.
 
  --- Pendientes
-    Pintar casas extras.
     Pintar todo el mapa por hilos.
     Limites clickeables.
     Limites pintados.
     Cambio de color segun posicion.
+    Pintar casas extras.
 
 -- Pagina --
  --- Completado

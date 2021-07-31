@@ -4,12 +4,13 @@ import {datUI} from './mainScene'
 import DrawSystem from './drawSystem'
 import PaintSprites from './paintSprites'
 import CacheRoads from './cacheRoads'
+import LiriaComponent from './classes/liriaComponent'
 import AvenuesNames from './avenuesNames'
 
 // Tamaño de la primera capa
 const MAX_GRID_SIZE = 287.532
 // Diferencia del zoom entre capas
-const NEW_ZOOM_DIF_LAYERS = [0, 7, 14]
+const NEW_ZOOM_DIF_LAYERS = [0, 5]
 // Area de la Grid
 const AREA_GRID = new Vector2(7758, 12473)
 // Parametros
@@ -112,11 +113,12 @@ function diffInGrid(from1, to1, from2, to2, callback) {
 // Main Class
 // -------
 
-export default class GridAPI {
+export default class GridAPI extends LiriaComponent {
     /** @type {GridAPI}*/
     static main
 
-    constructor(container, settings = {}) {
+    constructor(settings = {}) {
+        super()
         GridAPI.main = this
 
         this.loading = true
@@ -138,9 +140,8 @@ export default class GridAPI {
         this.lastFromR = new Vector2(0, 0)
         this.lastToR = new Vector2(0, 0)
 
-        container.addChild(this.gizmos)
+        this.addChild(this.gizmos)
 
-        this.container = container
         this.debug = datUI.addFolder("Grid API")
         this.debug.open()
 
@@ -154,7 +155,7 @@ export default class GridAPI {
     }
 
     static init(container, settings = {}) {
-        return new GridAPI(container, settings)
+        return new GridAPI(settings).init(container)
     }
 
     // [Obsoleto]
@@ -372,6 +373,8 @@ export default class GridAPI {
 
                         //DrawSystem.main?.add(li, x, y)
                     }
+
+                main.emit("zoomChange", li)
             }
             else {
                 const diffFrom = new Vector2(sfrom.x - main.lastFrom.x, sfrom.y - main.lastFrom.y)
